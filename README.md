@@ -1,4 +1,4 @@
-# dat250-project
+# dat250-project: 19 Sept
 ## Part 1 - Entity classes and ORM
 DONE.
 Different Java objects were successfully coded, including attributes and relational mapping.
