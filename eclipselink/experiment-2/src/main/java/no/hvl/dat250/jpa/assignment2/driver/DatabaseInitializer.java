@@ -6,8 +6,9 @@ import javax.persistence.*;
  */
 public class DatabaseInitializer {
 	private static final String PERSISTENCE_UNIT_NAME = ".";  // Your unit name here, see persistence.xml!!
-    private static EntityManagerFactory factory;
-	public static void main(String[] args) { 
+	public static void main(String[] args) {
+		EntityManagerFactory factory;
+
 		factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();

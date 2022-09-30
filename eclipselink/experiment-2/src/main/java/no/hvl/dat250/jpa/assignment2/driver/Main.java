@@ -14,10 +14,11 @@ import no.hvl.dat250.jpa.assignment2.Ticket;
 
 public class Main {
     public static final String PERSISTENCE_UNIT_NAME = "miniproject";
-    private static EntityManagerFactory factory;
 
     public static void main(String[] args) {
-    	
+
+        EntityManagerFactory factory;
+
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager em = factory.createEntityManager();
         
