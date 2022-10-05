@@ -16,9 +16,9 @@ public class DatabaseInitializer {
 // 2. Now make sure to first remove those tables that are not referenced by a foreign key (e.g. join tables) from some other table, afterwards remove all others				
 
 // Example:		
-		em.createNativeQuery("DROP TABLE PERSON_ADDRESS").executeUpdate();
-		em.createNativeQuery("DROP TABLE PERSON").executeUpdate();
-		em.createNativeQuery("DROP TABLE ADDRESS").executeUpdate();
+		//em.createNativeQuery("DROP TABLE PERSON_ADDRESS").executeUpdate();
+		//em.createNativeQuery("DROP TABLE PERSON").executeUpdate();
+		//em.createNativeQuery("DROP TABLE ADDRESS").executeUpdate();
 		em.getTransaction().commit();
 		em.close();
 		factory.close();
