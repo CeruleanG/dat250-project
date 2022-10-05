@@ -22,7 +22,10 @@ public class Poll {
     private boolean isPublic;
     private Long timer;
 
-    private VotePoll votePoll;
+    private Set<String> options;
+
+    @OneToMany(mappedBy = "fromPoll")
+    private Set<Ticket> tickets;
     
     @ManyToOne
     private UserProfile owner;
@@ -35,5 +38,9 @@ public class Poll {
         Gson gson = new Gson();
         String jsonIntString = gson.toJson(this);
         return jsonIntString;
+    }
+
+    public void addTicket(Ticket ticket){
+        this.tickets.add(ticket);
     }
 }

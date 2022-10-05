@@ -3,7 +3,6 @@ package no.hvl.dat250.jpa.assignment2;
 import com.google.gson.Gson;
 import no.hvl.dat250.jpa.assignment2.UserProfile;
 import no.hvl.dat250.jpa.assignment2.Poll;
-import no.hvl.dat250.jpa.assignment2.VotePoll;
 import no.hvl.dat250.jpa.assignment2.Ticket;
 import org.eclipse.jetty.util.DateCache;
 
@@ -23,7 +22,6 @@ public class API {
 
     Set<Poll> polls = new HashSet<>();
     Set<Ticket> tickets = new HashSet<>();
-    Set<VotePoll> votePolls = new HashSet<>();
 
     //***** POLL *****\\
     // Create a Poll
@@ -74,7 +72,7 @@ public class API {
                   ticket = gson.fromJson(req.body(),Ticket.class);
 
                   ticket.setFromPoll(poll);
-                  poll.
+                  poll.addTicket(ticket);
                   tickets.add(ticket);
                   return ticket.toJson();
                 }

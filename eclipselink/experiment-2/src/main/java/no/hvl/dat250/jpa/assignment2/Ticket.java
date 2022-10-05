@@ -21,7 +21,7 @@ public class Ticket {
     private UserProfile voter;
     
     @ManyToOne
-    private VotePoll fromPoll;
+    private Poll fromPoll;
 
     public String toJson()
     {
