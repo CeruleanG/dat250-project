@@ -26,7 +26,7 @@ public class API {
     //***** POLL *****\\
     // Create a Poll
     post(
-            "/poll",
+            "/polls",
             (req,res)->
             {
               Poll poll = new Poll();
