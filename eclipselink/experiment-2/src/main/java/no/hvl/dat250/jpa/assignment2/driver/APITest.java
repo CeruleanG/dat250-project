@@ -131,4 +131,15 @@ public class APITest {
     // The size was reduced by one due to the deletion.
     assertThat(pollsBeforeDelete.size() - 1, is(pollsAfterDelete.size()));
   }
+
+  private String doDeleteRequest(Long pollId) {
+    Request request = new Request.Builder()
+            .url(BASE_URL + "polls/" + pollId)
+            .delete()
+            .build();
+
+    doRequest(request);
+    return doRequest(request);
+  }
+
 }
