@@ -5,16 +5,23 @@ import no.hvl.dat250.jpa.assignment2.Poll;
 import no.hvl.dat250.jpa.assignment2.Ticket;
 
 import com.google.gson.Gson;
+import no.hvl.dat250.jpa.assignment2.UserProfile;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.gson.reflect.TypeToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -37,7 +44,15 @@ public class APITest {
 
   @Test
   public void testCreatePoll(){
-    Poll poll = new Poll("test summary", "test description");
+    Poll poll = new Poll();
+    poll.setSubject("My subject");
+    poll.setStatus(1);
+    poll.setPublic(true);
+    poll.setTimer(666L);
+    poll.setOptions(new HashSet<>());
+    poll.setTickets(new HashSet<>());
+    poll.setOwner(new UserProfile());
+    poll.setParticipants(new HashSet<>());
 
     // Execute post request
     final String postResult = doPostRequest(poll);
@@ -46,7 +61,12 @@ public class APITest {
     final Poll createdPoll = gson.fromJson(postResult, Poll.class);
 
     // Make sure our created todo is correct.
-    assertThat(createdPoll.getDescription(), is(poll.getDescription()));
+    assertThat(createdPoll.getId(), is(poll.getId()));
+    assertThat(createdPoll.getSubject(), is(poll.getSubject()));
+    assertThat(createdPoll.getStatus(), is(poll.getStatus()));
+    assertThat(createdPoll.get(), is(poll.getSummary()));
+    assertThat(createdPoll.getSummary(), is(poll.getSummary()));
+    assertThat(createdPoll.getSummary(), is(poll.getSummary()));
     assertThat(createdPoll.getSummary(), is(poll.getSummary()));
     assertNotNull(createdPoll.getId());
   }
