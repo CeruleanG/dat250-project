@@ -1,10 +1,6 @@
 package no.hvl.dat250.jpa.assignment2;
 
 import com.google.gson.Gson;
-//import no.hvl.dat250.jpa.assignment2.UserProfile;
-import no.hvl.dat250.jpa.assignment2.Poll;
-import no.hvl.dat250.jpa.assignment2.Ticket;
-import org.eclipse.jetty.util.DateCache;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -42,12 +38,37 @@ public class API {
 
 
     //***** POLL *****\\
+    // Get Polls
+    get(
+            "/polls",
+            (req,res)->
+            {
+              Gson gson = new Gson();
+              return gson.toJson(polls);
+            }
+    );
+
+    // Get a Poll with a given Id
+    get(
+            "polls/:id",
+            (req,res)->
+            {
+              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")){
+                return String.format("The id \"%s\" is not a number!", req.params(":id"));}
+              for (Poll poll : polls){
+                if ( req.params(":id").equals(poll.getId().toString())) {
+                  return poll.toJson();
+                }}
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
+
     // Create a Poll
     post(
             "/polls",
             (req,res)->
             {
-              Poll poll = new Poll();
+              Poll poll;
               Gson gson = new Gson();
               poll = gson.fromJson(req.body(),Poll.class);
 
@@ -93,7 +114,7 @@ public class API {
               }
               for(Poll poll : polls){
                 if(req.params(":id").equals(poll.getId().toString())){
-                  Ticket ticket = new Ticket();
+                  Ticket ticket;
                   Gson gson = new Gson();
                   ticket = gson.fromJson(req.body(),Ticket.class);
 
