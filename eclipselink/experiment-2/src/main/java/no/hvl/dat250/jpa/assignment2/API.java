@@ -35,6 +35,11 @@ public class API {
     Set<Ticket> tickets = new HashSet<>(q.getResultList());
     //Set<Ticket> tickets = new HashSet<>();
 
+    em.getTransaction().begin();
+    em.persist(polls);
+    em.getTransaction().commit();
+    em.close();
+
 
     //***** POLL *****\\
     // Create a Poll
@@ -47,10 +52,10 @@ public class API {
               poll = gson.fromJson(req.body(),Poll.class);
 
               polls.add(poll);
-              em.getTransaction().begin();
+              /*em.getTransaction().begin();
               em.persist(polls);
               em.getTransaction().commit();
-              em.close();
+              em.close();*/
               return poll.toJson();
             }
     );
@@ -69,7 +74,7 @@ public class API {
                   em.getTransaction().begin();
                   em.persist(polls);
                   em.getTransaction().commit();
-                  em.close();
+                  //em.close();
                   return poll.toJson();
                 }
               }
@@ -98,7 +103,7 @@ public class API {
                   em.getTransaction().begin();
                   em.persist(tickets);
                   em.getTransaction().commit();
-                  em.close();
+                  //em.close();
                   return ticket.toJson();
                 }
               }
@@ -120,7 +125,7 @@ public class API {
                   em.getTransaction().begin();
                   em.persist(tickets);
                   em.getTransaction().commit();
-                  em.close();
+                  //em.close();
                   return ticket.toJson();
                 }
               }
