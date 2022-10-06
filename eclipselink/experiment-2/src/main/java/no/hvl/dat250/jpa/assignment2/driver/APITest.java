@@ -121,7 +121,7 @@ public class APITest {
     final List<Poll> pollsBeforeDelete = parsePolls(doGetRequest());
 
     // Execute delete request
-    doDeleteRequest(createdPoll.getId());
+    //doDeleteRequest(createdPoll.getId());
 
     final List<Poll> pollsAfterDelete = parsePolls(doGetRequest());
 

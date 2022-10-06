@@ -47,6 +47,10 @@ public class API {
               poll = gson.fromJson(req.body(),Poll.class);
 
               polls.add(poll);
+              em.getTransaction().begin();
+              em.persist(polls);
+              em.getTransaction().commit();
+              em.close();
               return poll.toJson();
             }
     );
@@ -62,6 +66,10 @@ public class API {
               for(Poll poll : polls){
                 if(req.params(":id").equals(poll.getId().toString())){
                   polls.remove(poll);
+                  em.getTransaction().begin();
+                  em.persist(polls);
+                  em.getTransaction().commit();
+                  em.close();
                   return poll.toJson();
                 }
               }
@@ -87,6 +95,10 @@ public class API {
                   ticket.setFromPoll(poll);
                   poll.addTicket(ticket);
                   tickets.add(ticket);
+                  em.getTransaction().begin();
+                  em.persist(tickets);
+                  em.getTransaction().commit();
+                  em.close();
                   return ticket.toJson();
                 }
               }
@@ -105,6 +117,10 @@ public class API {
               for(Ticket ticket : tickets){
                 if(req.params(":id").equals(ticket.getId().toString())){
                   tickets.remove(ticket);
+                  em.getTransaction().begin();
+                  em.persist(tickets);
+                  em.getTransaction().commit();
+                  em.close();
                   return ticket.toJson();
                 }
               }
