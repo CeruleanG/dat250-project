@@ -6,17 +6,19 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
 @Setter
-public class Poll {
+public class Poll implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private static final AtomicLong atomicLong = new AtomicLong(0);
+
     private final Long id;
+    private static final AtomicLong atomicLong = new AtomicLong(0);
     private String subject;
     private int Status;
     private boolean isPublic;

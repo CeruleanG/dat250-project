@@ -6,8 +6,9 @@
 
         <class>no.hvl.dat250.jpa.assignment2.Poll</class>
         <class>no.hvl.dat250.jpa.assignment2.UserProfile</class>
-        <class>no.hvl.dat250.jpa.assignment2.VotePoll</class>
         <class>no.hvl.dat250.jpa.assignment2.Ticket</class>
+
+
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>

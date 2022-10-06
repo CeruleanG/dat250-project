@@ -6,17 +6,18 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 
 @Entity
 @Getter
 @Setter
-public class Ticket {
+public class Ticket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private static final AtomicLong atomicLong = new AtomicLong(0);
     private final Long id;
+    private static final AtomicLong atomicLong = new AtomicLong(0);
     private int voteNb;
 
     private UserProfile voter;

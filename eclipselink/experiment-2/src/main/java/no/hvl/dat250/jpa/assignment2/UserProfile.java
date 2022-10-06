@@ -6,17 +6,18 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
 @Setter
-public class UserProfile {
+public class UserProfile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private static final AtomicLong atomicLong = new AtomicLong(0);
     private final Long id;
+    private static final AtomicLong atomicLong = new AtomicLong(0);
     private String login;
     private String pwd;
     

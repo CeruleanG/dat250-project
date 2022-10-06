@@ -1,17 +1,23 @@
 package no.hvl.dat250.jpa.assignment2;
 
 import com.google.gson.Gson;
-import no.hvl.dat250.jpa.assignment2.UserProfile;
+//import no.hvl.dat250.jpa.assignment2.UserProfile;
 import no.hvl.dat250.jpa.assignment2.Poll;
 import no.hvl.dat250.jpa.assignment2.Ticket;
 import org.eclipse.jetty.util.DateCache;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.util.HashSet;
 import java.util.Set;
 
 import static spark.Spark.*;
 
 public class API {
+  private static final String PERSISTENCE_UNIT_NAME = "miniproject";
+  private static EntityManagerFactory factory;
   public static void main(String[] args){
     if(args.length > 0){
       port(Integer.parseInt(args[0]));
@@ -20,8 +26,15 @@ public class API {
     }
     after((req, res) -> res.type("application/json"));
 
-    Set<Poll> polls = new HashSet<>();
-    Set<Ticket> tickets = new HashSet<>();
+    factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+    EntityManager em = factory.createEntityManager();
+    Query q = em.createQuery("select t from Poll t");
+    Set<Poll> polls = new HashSet<>(q.getResultList());
+    //Set<Poll> polls = new HashSet<>();
+    q = em.createQuery("select t from Ticket t");
+    Set<Ticket> tickets = new HashSet<>(q.getResultList());
+    //Set<Ticket> tickets = new HashSet<>();
+
 
     //***** POLL *****\\
     // Create a Poll
@@ -40,7 +53,7 @@ public class API {
 
     // Delete a Poll
     delete(
-            "/poll/:id",
+            "/polls/:id",
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
@@ -59,7 +72,7 @@ public class API {
     //***** TICKET *****\\
     // Create a Ticket
     post(
-            "/poll/:id/ticket/",
+            "/polls/:id/ticket/",
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
@@ -83,7 +96,7 @@ public class API {
 
     // Delete a Ticket
     delete(
-            "/ticket/:id",
+            "/tickets/:id",
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
