@@ -17,7 +17,7 @@ import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class APITest {
   private static final String SERVER_PORT = "6000";
@@ -81,5 +81,54 @@ public class APITest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private List<Poll> parsePolls(String result) {
+    return gson.fromJson(result, POLL_LIST_TYPE);
+  }
+
+  private String doGetRequest(Long pollId) {
+    return this.doGetRequest(BASE_URL + "polls/" + pollId);
+  }
+
+  private String doGetRequest(String url) {
+    Request request = new Request.Builder()
+            .url(url)
+            .get()
+            .build();
+
+    return doRequest(request);
+  }
+
+  private String doGetRequest() {
+    return this.doGetRequest(BASE_URL + "polls");
+  }
+
+  @Test
+  public void testDeletePoll() {
+    // Save an element, which we can delete later.
+    final Poll poll = new Poll();
+    poll.setSubject("My subject");
+    poll.setStatus(1);
+    poll.setPublic(true);
+    poll.setTimer(666L);
+    poll.setOptions(new HashSet<>());
+    poll.setTickets(new HashSet<>());
+    poll.setOwner(new UserProfile());
+    poll.setParticipants(new HashSet<>());
+    final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
+
+    final List<Poll> pollsBeforeDelete = parsePolls(doGetRequest());
+
+    // Execute delete request
+    doDeleteRequest(createdPoll.getId());
+
+    final List<Poll> pollsAfterDelete = parsePolls(doGetRequest());
+
+    assertTrue(pollsBeforeDelete.contains(createdPoll));
+    // Poll not contained anymore.
+    assertFalse(pollsAfterDelete.contains(createdPoll));
+    // The size was reduced by one due to the deletion.
+    assertThat(pollsBeforeDelete.size() - 1, is(pollsAfterDelete.size()));
   }
 }
