@@ -29,10 +29,10 @@ public class Main {
         VotePoll votePoll = new VotePoll();
         Ticket ticket = new Ticket();
         
-        user.setId((long) 1);
+        //user.setId((long) 1);
         user.setLogin("login");
         user.setPwd("pwd");
-        poll.setId((long) 2);
+        //poll.setId((long) 2);
         poll.setPublic(true);
         poll.setStatus(1);
         poll.setSubject("What");
@@ -41,7 +41,7 @@ public class Main {
         Set<String> options = new HashSet<>();
         options.add("1");
         votePoll.setOptions(options);
-        ticket.setId((long) 4);
+        //ticket.setId((long) 4);
         ticket.setVoteNb(1);
         
         Set<Poll> ownedPolls = new HashSet<>();

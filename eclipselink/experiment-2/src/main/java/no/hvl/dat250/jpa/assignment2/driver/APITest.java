@@ -58,7 +58,7 @@ public class APITest {
     assertThat(createdPoll.getTimer(), is(poll.getTimer()));
     assertThat(createdPoll.getOptions(), is(poll.getOptions()));
     assertThat(createdPoll.getTickets(), is(poll.getTickets()));
-    assertThat(createdPoll.getOwner(), is(poll.getOwner()));
+    assertThat(createdPoll.getOwner().toJson(), is(poll.getOwner().toJson()));
     assertThat(createdPoll.getParticipants(), is(poll.getParticipants()));
     assertNotNull(createdPoll.getId());
   }

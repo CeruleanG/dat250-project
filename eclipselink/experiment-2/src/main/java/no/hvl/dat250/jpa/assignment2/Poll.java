@@ -4,19 +4,19 @@ import javax.persistence.*;
 
 import com.google.gson.Gson;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private static final AtomicLong atomicLong = new AtomicLong(0);
+    private final Long id;
     private String subject;
     private int Status;
     private boolean isPublic;
@@ -32,6 +32,14 @@ public class Poll {
     
     @ManyToMany
     private Set<UserProfile> participants;
+
+    public Poll(Long id){
+        this.id = id;
+    }
+
+    public Poll(){
+        this(atomicLong.incrementAndGet());
+    }
 
     public String toJson()
     {
