@@ -57,9 +57,9 @@ public class Main {
         user.setPollsParticipated(participatedPolls);
         poll.setOwner(user);
         poll.setParticipants(userProfiles);
-        poll.setVotePoll(votePoll);
+        //poll.setVotePoll(votePoll);
         votePoll.setTickets(tickets);
-        ticket.setFromPoll(votePoll);
+        //ticket.setFromPoll(votePoll);
         ticket.setVoter(user);
         
         em.persist(user);

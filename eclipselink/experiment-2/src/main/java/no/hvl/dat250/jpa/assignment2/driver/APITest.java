@@ -1,32 +1,23 @@
 package no.hvl.dat250.jpa.assignment2.driver;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import no.hvl.dat250.jpa.assignment2.API;
 import no.hvl.dat250.jpa.assignment2.Poll;
-import no.hvl.dat250.jpa.assignment2.Ticket;
-
-import com.google.gson.Gson;
 import no.hvl.dat250.jpa.assignment2.UserProfile;
 import okhttp3.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-import com.google.gson.reflect.TypeToken;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
-
 
 public class APITest {
   private static final String SERVER_PORT = "6000";
@@ -60,14 +51,15 @@ public class APITest {
     // Parse the created poll
     final Poll createdPoll = gson.fromJson(postResult, Poll.class);
 
-    // Make sure our created todo is correct.
+    // Make sure our created poll is correct.
     assertThat(createdPoll.getId(), is(poll.getId()));
     assertThat(createdPoll.getSubject(), is(poll.getSubject()));
     assertThat(createdPoll.getStatus(), is(poll.getStatus()));
-    assertThat(createdPoll.get(), is(poll.getSummary()));
-    assertThat(createdPoll.getSummary(), is(poll.getSummary()));
-    assertThat(createdPoll.getSummary(), is(poll.getSummary()));
-    assertThat(createdPoll.getSummary(), is(poll.getSummary()));
+    assertThat(createdPoll.getTimer(), is(poll.getTimer()));
+    assertThat(createdPoll.getOptions(), is(poll.getOptions()));
+    assertThat(createdPoll.getTickets(), is(poll.getTickets()));
+    assertThat(createdPoll.getOwner(), is(poll.getOwner()));
+    assertThat(createdPoll.getParticipants(), is(poll.getParticipants()));
     assertNotNull(createdPoll.getId());
   }
 
@@ -90,6 +82,4 @@ public class APITest {
       throw new RuntimeException(e);
     }
   }
-
-
 }
