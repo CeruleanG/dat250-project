@@ -31,10 +31,10 @@ public class API {
     Set<Ticket> tickets = new HashSet<>(q.getResultList());
     //Set<Ticket> tickets = new HashSet<>();
 
-    em.getTransaction().begin();
+    /*em.getTransaction().begin();
     em.persist(polls);
     em.getTransaction().commit();
-    em.close();
+    em.close();*/
 
 
     //***** POLL *****\\
@@ -73,10 +73,10 @@ public class API {
               poll = gson.fromJson(req.body(),Poll.class);
 
               polls.add(poll);
-              /*em.getTransaction().begin();
-              em.persist(polls);
+              em.getTransaction().begin();
+              em.persist(poll);
               em.getTransaction().commit();
-              em.close();*/
+              em.close();
               return poll.toJson();
             }
     );
