@@ -76,6 +76,7 @@ public class API {
               em.getTransaction().begin();
               em.persist(poll);
               em.getTransaction().commit();
+              //em.flush();
               em.close();
               return poll.toJson();
             }
@@ -93,7 +94,7 @@ public class API {
                 if(req.params(":id").equals(poll.getId().toString())){
                   polls.remove(poll);
                   em.getTransaction().begin();
-                  em.persist(polls);
+                  em.persist(poll);
                   em.getTransaction().commit();
                   //em.close();
                   return poll.toJson();
@@ -102,6 +103,15 @@ public class API {
               return String.format("The id \"%s\" not found!", req.params(":id"));
             }
     );
+
+    //********************
+    // TO DELETE
+    /*
+    int findId = req.params(":id");
+    em.createQuery("delete from Poll p where p.id=:findId").executeUpdate();
+    */
+    //********************
+
     //***** POLL *****\\
     //***** TICKET *****\\
     // Create a Ticket
@@ -122,7 +132,7 @@ public class API {
                   poll.addTicket(ticket);
                   tickets.add(ticket);
                   em.getTransaction().begin();
-                  em.persist(tickets);
+                  em.persist(ticket);
                   em.getTransaction().commit();
                   //em.close();
                   return ticket.toJson();
@@ -144,7 +154,7 @@ public class API {
                 if(req.params(":id").equals(ticket.getId().toString())){
                   tickets.remove(ticket);
                   em.getTransaction().begin();
-                  em.persist(tickets);
+                  em.persist(ticket);
                   em.getTransaction().commit();
                   //em.close();
                   return ticket.toJson();
