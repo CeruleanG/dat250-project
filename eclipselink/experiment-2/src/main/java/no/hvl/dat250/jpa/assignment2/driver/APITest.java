@@ -87,11 +87,11 @@ public class APITest {
     return gson.fromJson(result, POLL_LIST_TYPE);
   }
 
-  private String doGetRequest(Long pollId) {
-    return this.doGetRequest(BASE_URL + "polls/" + pollId);
+  private String doGetRequestPoll(Long pollId) {
+    return this.doGetRequestPoll(BASE_URL + "polls/" + pollId);
   }
 
-  private String doGetRequest(String url) {
+  private String doGetRequestPoll(String url) {
     Request request = new Request.Builder()
             .url(url)
             .get()
@@ -100,8 +100,32 @@ public class APITest {
     return doRequest(request);
   }
 
-  private String doGetRequest() {
-    return this.doGetRequest(BASE_URL + "polls");
+  private String doGetRequestPoll() {
+    return this.doGetRequestPoll(BASE_URL + "polls");
+  }
+
+  @Test
+  public void testReadOnePoll() {
+    // Save one poll.
+    final Poll poll = new Poll();
+    poll.setSubject("My subject");
+    poll.setStatus(1);
+    poll.setPublic(true);
+    poll.setTimer(666L);
+    poll.setOptions(new HashSet<>());
+    poll.setTickets(new HashSet<>());
+    poll.setOwner(new UserProfile());
+    poll.setParticipants(new HashSet<>());
+    final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
+
+    // Execute get request
+    final String getResult = doGetRequestPoll(createdPoll.getId());
+
+    // Parse returned poll.
+    final Poll returnedPoll = gson.fromJson(getResult, Poll.class);
+
+    // The returned poll must be the one we created earlier.
+    assertThat(returnedPoll, is(createdPoll));
   }
 
   @Test
@@ -118,12 +142,12 @@ public class APITest {
     poll.setParticipants(new HashSet<>());
     final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
 
-    final List<Poll> pollsBeforeDelete = parsePolls(doGetRequest());
+    final List<Poll> pollsBeforeDelete = parsePolls(doGetRequestPoll());
 
     // Execute delete request
     //doDeleteRequest(createdPoll.getId());
 
-    final List<Poll> pollsAfterDelete = parsePolls(doGetRequest());
+    final List<Poll> pollsAfterDelete = parsePolls(doGetRequestPoll());
 
     assertTrue(pollsBeforeDelete.contains(createdPoll));
     // Poll not contained anymore.
