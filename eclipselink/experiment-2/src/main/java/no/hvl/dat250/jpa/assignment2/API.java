@@ -73,11 +73,13 @@ public class API {
               poll = gson.fromJson(req.body(),Poll.class);
 
               polls.add(poll);
+              /*
               em.getTransaction().begin();
               em.persist(poll);
               em.getTransaction().commit();
               //em.flush();
               em.close();
+              */
               return poll.toJson();
             }
     );
@@ -93,10 +95,12 @@ public class API {
               for(Poll poll : polls){
                 if(req.params(":id").equals(poll.getId().toString())){
                   polls.remove(poll);
+                  /*
                   em.getTransaction().begin();
                   em.persist(poll);
                   em.getTransaction().commit();
                   //em.close();
+                  */
                   return poll.toJson();
                 }
               }
@@ -116,7 +120,7 @@ public class API {
     //***** TICKET *****\\
     // Create a Ticket
     post(
-            "/polls/:id/ticket/",
+            "/polls/:id/ticket",
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
@@ -131,10 +135,13 @@ public class API {
                   ticket.setFromPoll(poll);
                   poll.addTicket(ticket);
                   tickets.add(ticket);
+                  /*
                   em.getTransaction().begin();
                   em.persist(ticket);
                   em.getTransaction().commit();
                   //em.close();
+
+                   */
                   return ticket.toJson();
                 }
               }
@@ -153,10 +160,13 @@ public class API {
               for(Ticket ticket : tickets){
                 if(req.params(":id").equals(ticket.getId().toString())){
                   tickets.remove(ticket);
+                  /*
                   em.getTransaction().begin();
                   em.persist(ticket);
                   em.getTransaction().commit();
                   //em.close();
+
+                   */
                   return ticket.toJson();
                 }
               }

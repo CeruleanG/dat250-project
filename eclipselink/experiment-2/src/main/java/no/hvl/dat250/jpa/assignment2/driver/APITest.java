@@ -124,9 +124,60 @@ public class APITest {
     // Parse returned poll.
     final Poll returnedPoll = gson.fromJson(getResult, Poll.class);
 
-    // The returned poll must be the one we created earlier.
-    assertThat(returnedPoll, is(createdPoll));
+//    // The returned poll must be the one we created earlier.
+//    assertThat(returnedPoll, is(createdPoll));
+    // Make sure our created poll is correct.
+    assertThat(returnedPoll.getId(), is(createdPoll.getId()));
+    assertThat(returnedPoll.getSubject(), is(createdPoll.getSubject()));
+    assertThat(returnedPoll.getStatus(), is(createdPoll.getStatus()));
+    assertThat(returnedPoll.getTimer(), is(createdPoll.getTimer()));
+    assertThat(returnedPoll.getOptions(), is(createdPoll.getOptions()));
+    assertThat(returnedPoll.getTickets(), is(createdPoll.getTickets()));
+    assertThat(returnedPoll.getOwner().toJson(), is(createdPoll.getOwner().toJson()));
+    assertThat(returnedPoll.getParticipants(), is(createdPoll.getParticipants()));
+    assertNotNull(returnedPoll.getId());
   }
+
+  @Test
+  public void testReadAllPoll() {
+    // Save 2 polls.
+    final Poll poll1 = new Poll();
+    poll1.setSubject("My subject");
+    poll1.setStatus(1);
+    poll1.setPublic(true);
+    poll1.setTimer(666L);
+    poll1.setOptions(new HashSet<>());
+    poll1.setTickets(new HashSet<>());
+    poll1.setOwner(new UserProfile());
+    poll1.setParticipants(new HashSet<>());
+
+    final Poll poll2 = new Poll();
+    poll2.setSubject("My subject");
+    poll2.setStatus(1);
+    poll2.setPublic(true);
+    poll2.setTimer(666L);
+    poll2.setOptions(new HashSet<>());
+    poll2.setTickets(new HashSet<>());
+    poll2.setOwner(new UserProfile());
+    poll2.setParticipants(new HashSet<>());
+
+    final Poll createdPoll1 = gson.fromJson(doPostRequest(poll1), Poll.class);
+    final Poll createdPoll2 = gson.fromJson(doPostRequest(poll2), Poll.class);
+
+    // Execute get request
+    final String getResult = doGetRequestPoll();
+
+    // Parse returned list of polls.
+    final List<Poll> polls = parsePolls(getResult);
+
+    // We have at least the two created polls.
+    assertTrue(polls.size() >= 2);
+
+    // The polls are contained in the list.
+    assertTrue(polls.contains(createdPoll1));
+    assertTrue(polls.contains(createdPoll2));
+  }
+
 
   @Test
   public void testDeletePoll() {
@@ -145,7 +196,7 @@ public class APITest {
     final List<Poll> pollsBeforeDelete = parsePolls(doGetRequestPoll());
 
     // Execute delete request
-    //doDeleteRequest(createdPoll.getId());
+    doDeleteRequest(createdPoll.getId());
 
     final List<Poll> pollsAfterDelete = parsePolls(doGetRequestPoll());
 
