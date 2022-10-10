@@ -172,8 +172,28 @@ public class API {
                     if (req.params(":ticketId").equals(ticket.getId().toString())) {
                       return ticket.toJson();
                     }
-                    return String.format("Ticket with the id \"%s\" not found!", req.params(":ticketId"));
                   }
+                  return String.format("Ticket with the id \"%s\" not found!", req.params(":ticketId"));
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":pollId"));
+            }
+    );
+
+    // Get all Tickets from a given Poll ID
+    get(
+            "polls/:pollId/tickets",
+            (req, res) ->
+            {
+              if (!req.params(":pollId").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The poll id \"%s\" is not a number!", req.params(":pollId"));
+              }
+              for (Poll poll : polls) {
+                // We found the selected Poll
+                if (req.params(":pollId").equals(poll.getId().toString())) {
+                  Gson gson = new Gson();
+                  // Let's find the correct Ticket
+                  return gson.toJson(poll.getTickets());
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":pollId"));
