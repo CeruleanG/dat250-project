@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -24,16 +25,16 @@ public class Poll implements Serializable {
     private boolean isPublic;
     private Long timer;
 
-    private Set<String> options;
+    private Set<String> options = new HashSet<>();
 
     @OneToMany(mappedBy = "fromPoll")
-    private Set<Ticket> tickets;
+    private Set<Ticket> tickets = new HashSet<>();
     
     @ManyToOne
     private UserProfile owner;
     
     @ManyToMany
-    private Set<UserProfile> participants;
+    private Set<UserProfile> participants = new HashSet<>();
 
     public Poll(Long id){
         this.id = id;

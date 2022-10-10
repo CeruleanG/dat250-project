@@ -123,6 +123,7 @@ public class API {
             "/polls/:id/ticket",
             (req,res)->
             {
+
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
@@ -131,8 +132,8 @@ public class API {
                   Ticket ticket;
                   Gson gson = new Gson();
                   ticket = gson.fromJson(req.body(),Ticket.class);
-
                   poll.addTicket(ticket);
+
                   /*
                   em.getTransaction().begin();
                   em.persist(ticket);
