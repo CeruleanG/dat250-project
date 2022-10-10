@@ -13,7 +13,8 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
             <property name="javax.persistence.jdbc.url"
-                      value="jdbc:derby:D:\Program Files\Java\database\mini_project;create=true"/> 
+                      value="jdbc:derby:C:\Users\rusli\Desktop\database\mini_project;create=true"/>
+            <!--  value="jdbc:derby:D:\Program Files\Java\database\mini_project;create=true"/>-->
             <property name="javax.persistence.jdbc.user" value="test"/>
             <property name="javax.persistence.jdbc.password" value="test"/>
 
