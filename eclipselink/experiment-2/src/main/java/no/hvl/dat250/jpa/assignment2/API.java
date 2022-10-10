@@ -1,7 +1,4 @@
 package no.hvl.dat250.jpa.assignment2;
-//testAntho
-
-//meow meow test
 
 import com.google.gson.Gson;
 
@@ -57,7 +54,7 @@ public class API {
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")){
-                return String.format("The id \"%s\" is not a number!", req.params(":id"));}
+                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));}
               for (Poll poll : polls){
                 if ( req.params(":id").equals(poll.getId().toString())) {
                   return poll.toJson();
@@ -93,7 +90,7 @@ public class API {
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
-                return String.format("The id \"%s\" is not a number!", req.params(":id"));
+                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
               for(Poll poll : polls){
                 if(req.params(":id").equals(poll.getId().toString())){
@@ -107,7 +104,7 @@ public class API {
                   return poll.toJson();
                 }
               }
-              return String.format("The id \"%s\" not found!", req.params(":id"));
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
 
@@ -127,7 +124,7 @@ public class API {
             (req,res)->
             {
               if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
-                return String.format("The id \"%s\" is not a number!", req.params(":id"));
+                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
               for(Poll poll : polls){
                 if(req.params(":id").equals(poll.getId().toString())){
@@ -135,9 +132,7 @@ public class API {
                   Gson gson = new Gson();
                   ticket = gson.fromJson(req.body(),Ticket.class);
 
-                  ticket.setFromPoll(poll);
                   poll.addTicket(ticket);
-                  tickets.add(ticket);
                   /*
                   em.getTransaction().begin();
                   em.persist(ticket);
@@ -145,10 +140,10 @@ public class API {
                   //em.close();
 
                    */
-                  return ticket.toJson();
+                  return poll.toJson();
                 }
               }
-              return String.format("The id \"%s\" not found!", req.params(":id"));
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
 
