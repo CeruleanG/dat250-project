@@ -1,5 +1,5 @@
 package no.hvl.dat250.jpa.assignment2;
-
+//testAntho
 import com.google.gson.Gson;
 
 import javax.persistence.EntityManager;
@@ -119,7 +119,7 @@ public class API {
     //***** POLL *****\\
     //***** TICKET *****\\
     // Create a Ticket
-    post(
+    put(
             "/polls/:id/ticket",
             (req,res)->
             {
