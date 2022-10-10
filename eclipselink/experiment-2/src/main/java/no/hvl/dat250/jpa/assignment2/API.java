@@ -1,5 +1,5 @@
 package no.hvl.dat250.jpa.assignment2;
-
+//meow meow test
 import com.google.gson.Gson;
 
 import javax.persistence.EntityManager;
