@@ -14,8 +14,9 @@ import static spark.Spark.*;
 public class API {
   private static final String PERSISTENCE_UNIT_NAME = "miniproject";
   private static EntityManagerFactory factory;
-  public static void main(String[] args){
-    if(args.length > 0){
+
+  public static void main(String[] args) {
+    if (args.length > 0) {
       port(Integer.parseInt(args[0]));
     } else {
       port(6000);
@@ -41,7 +42,7 @@ public class API {
     // Get Polls
     get(
             "/polls",
-            (req,res)->
+            (req, res) ->
             {
               Gson gson = new Gson();
               return gson.toJson(polls);
@@ -51,14 +52,16 @@ public class API {
     // Get a Poll with a given Id
     get(
             "polls/:id",
-            (req,res)->
+            (req, res) ->
             {
-              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")){
-                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));}
-              for (Poll poll : polls){
-                if ( req.params(":id").equals(poll.getId().toString())) {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
+              }
+              for (Poll poll : polls) {
+                if (req.params(":id").equals(poll.getId().toString())) {
                   return poll.toJson();
-                }}
+                }
+              }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
@@ -66,11 +69,11 @@ public class API {
     // Create a Poll
     post(
             "/polls",
-            (req,res)->
+            (req, res) ->
             {
               Poll poll;
               Gson gson = new Gson();
-              poll = gson.fromJson(req.body(),Poll.class);
+              poll = gson.fromJson(req.body(), Poll.class);
 
               polls.add(poll);
               /*
@@ -87,13 +90,13 @@ public class API {
     // Delete a Poll
     delete(
             "/polls/:id",
-            (req,res)->
+            (req, res) ->
             {
-              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
-              for(Poll poll : polls){
-                if(req.params(":id").equals(poll.getId().toString())){
+              for (Poll poll : polls) {
+                if (req.params(":id").equals(poll.getId().toString())) {
                   polls.remove(poll);
                   /*
                   em.getTransaction().begin();
@@ -121,17 +124,17 @@ public class API {
     // Create a Ticket
     put(
             "/polls/:id/ticket",
-            (req,res)->
+            (req, res) ->
             {
 
-              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
-              for(Poll poll : polls){
-                if(req.params(":id").equals(poll.getId().toString())){
+              for (Poll poll : polls) {
+                if (req.params(":id").equals(poll.getId().toString())) {
                   Ticket ticket;
                   Gson gson = new Gson();
-                  ticket = gson.fromJson(req.body(),Ticket.class);
+                  ticket = gson.fromJson(req.body(), Ticket.class);
                   poll.addTicket(ticket);
 
                   /*
@@ -148,30 +151,59 @@ public class API {
             }
     );
 
-    // Delete a Ticket
-    delete(
-            "/tickets/:id",
-            (req,res)->
+    // Get a Ticket with a given Id
+    get(
+            "polls/:pollId/tickets/:ticketId",
+            (req, res) ->
             {
-              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
-                return String.format("The id \"%s\" is not a number!", req.params(":id"));
+              if (!req.params(":pollId").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The poll id \"%s\" is not a number!", req.params(":pollId"));
               }
-              for(Ticket ticket : tickets){
-                if(req.params(":id").equals(ticket.getId().toString())){
-                  tickets.remove(ticket);
-                  /*
-                  em.getTransaction().begin();
-                  em.persist(ticket);
-                  em.getTransaction().commit();
-                  //em.close();
-
-                   */
-                  return ticket.toJson();
+              if (!req.params(":ticketId").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The poll id \"%s\" is not a number!", req.params(":ticketId"));
+              }
+              for (Poll poll : polls) {
+                // We found the selected Poll
+                if (req.params(":pollId").equals(poll.getId().toString())) {
+                  // Let's find the correct Ticket
+                  Set<Ticket> pollTickets = poll.getTickets();
+                  for (Ticket ticket : pollTickets) {
+                    // We found the selected Ticket
+                    if (req.params(":ticketId").equals(ticket.getId().toString())) {
+                      return ticket.toJson();
+                    }
+                    return String.format("Ticket with the id \"%s\" not found!", req.params(":ticketId"));
+                  }
                 }
               }
-              return String.format("The id \"%s\" not found!", req.params(":id"));
+              return String.format("Poll with the id \"%s\" not found!", req.params(":pollId"));
             }
     );
+
+//    // Delete a Ticket
+//    delete(
+//            "polls/:pollId/tickets/:ticketId",
+//            (req,res)->
+//            {
+//              if(!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+//                return String.format("The id \"%s\" is not a number!", req.params(":id"));
+//              }
+//              for(Ticket ticket : tickets){
+//                if(req.params(":id").equals(ticket.getId().toString())){
+//                  tickets.remove(ticket);
+//                  /*
+//                  em.getTransaction().begin();
+//                  em.persist(ticket);
+//                  em.getTransaction().commit();
+//                  //em.close();
+//
+//                   */
+//                  return ticket.toJson();
+//                }
+//              }
+//              return String.format("The id \"%s\" not found!", req.params(":id"));
+//            }
+//    );
     //***** TICKET *****\\
   }
 }
