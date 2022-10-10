@@ -123,7 +123,7 @@ public class API {
     //***** TICKET *****\\
     // Create a Ticket
     put(
-            "/polls/:id/ticket",
+            "/polls/:id/tickets",
             (req, res) ->
             {
 
