@@ -19,11 +19,11 @@ public class API {
     if (args.length > 0) {
       port(Integer.parseInt(args[0]));
     } else {
-      port(6000);
+      port(6060);
     }
     after((req, res) -> res.type("application/json"));
 
-    factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+    /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     EntityManager em = factory.createEntityManager();
     Query q = em.createQuery("select t from Poll t");
     Set<Poll> polls = new HashSet<>(q.getResultList());
@@ -32,11 +32,13 @@ public class API {
     Set<Ticket> tickets = new HashSet<>(q.getResultList());
     //Set<Ticket> tickets = new HashSet<>();
 
-    /*em.getTransaction().begin();
+    em.getTransaction().begin();
     em.persist(polls);
     em.getTransaction().commit();
     em.close();*/
 
+    Set<Poll> polls = new HashSet<>();
+    Set<Ticket> tickets = new HashSet<>();
 
     //***** POLL *****\\
     // Get Polls
@@ -76,13 +78,13 @@ public class API {
               poll = gson.fromJson(req.body(), Poll.class);
 
               polls.add(poll);
-              /*
-              em.getTransaction().begin();
+
+              /*em.getTransaction().begin();
               em.persist(poll);
               em.getTransaction().commit();
               //em.flush();
-              em.close();
-              */
+              em.close();*/
+
               return poll.toJson();
             }
     );

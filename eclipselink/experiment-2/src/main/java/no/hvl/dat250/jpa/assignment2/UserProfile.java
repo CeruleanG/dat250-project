@@ -21,10 +21,10 @@ public class UserProfile implements Serializable {
     private String login;
     private String pwd;
     
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner")
     private Set<Poll> PollsOwned;
     
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "participants")
     private Set<Poll> PollsParticipated;
 
     public UserProfile(Long id){

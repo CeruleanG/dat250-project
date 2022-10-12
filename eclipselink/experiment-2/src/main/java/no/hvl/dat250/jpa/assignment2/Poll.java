@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Poll implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private final Long id;
     private static final AtomicLong atomicLong = new AtomicLong(0);
     private String subject;
@@ -30,10 +29,10 @@ public class Poll implements Serializable {
     @OneToMany(mappedBy = "fromPoll")
     private Set<Ticket> tickets = new HashSet<>();
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private UserProfile owner;
     
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<UserProfile> participants = new HashSet<>();
 
     public Poll(Long id){
