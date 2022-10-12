@@ -17,8 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Poll implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private static final AtomicLong atomicLong = new AtomicLong(0);
+    private Long id;
     private String subject;
     private int Status;
     private boolean isPublic;
@@ -39,9 +38,7 @@ public class Poll implements Serializable {
         this.id = id;
     }
 
-    public Poll(){
-        this(atomicLong.incrementAndGet());
-    }
+    public Poll(){}
 
     public String toJson()
     {

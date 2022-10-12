@@ -23,22 +23,7 @@ public class API {
     }
     after((req, res) -> res.type("application/json"));
 
-    /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-    EntityManager em = factory.createEntityManager();
-    Query q = em.createQuery("select t from Poll t");
-    Set<Poll> polls = new HashSet<>(q.getResultList());
-    //Set<Poll> polls = new HashSet<>();
-    q = em.createQuery("select t from Ticket t");
-    Set<Ticket> tickets = new HashSet<>(q.getResultList());
-    //Set<Ticket> tickets = new HashSet<>();
-
-    em.getTransaction().begin();
-    em.persist(polls);
-    em.getTransaction().commit();
-    em.close();*/
-
-    Set<Poll> polls = new HashSet<>();
-    Set<Ticket> tickets = new HashSet<>();
+    DataJPA jpa = new DataJPA();
 
     //***** POLL *****\\
     // Get Polls
@@ -47,7 +32,7 @@ public class API {
             (req, res) ->
             {
               Gson gson = new Gson();
-              return gson.toJson(polls);
+              return gson.toJson(jpa.getPolls());
             }
     );
 
@@ -59,6 +44,7 @@ public class API {
               if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
+              Set<Poll> polls=jpa.getPolls();
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   return poll.toJson();
@@ -73,17 +59,12 @@ public class API {
             "/polls",
             (req, res) ->
             {
-              Poll poll;
+              Set<Poll> polls = jpa.getPolls();
               Gson gson = new Gson();
-              poll = gson.fromJson(req.body(), Poll.class);
-
+              Poll poll = gson.fromJson(req.body(), Poll.class);
               polls.add(poll);
 
-              /*em.getTransaction().begin();
-              em.persist(poll);
-              em.getTransaction().commit();
-              //em.flush();
-              em.close();*/
+              jpa.saveData(poll);
 
               return poll.toJson();
             }
@@ -97,6 +78,7 @@ public class API {
               if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
+              Set<Poll> polls = jpa.getPolls();
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   polls.remove(poll);
@@ -132,6 +114,7 @@ public class API {
               if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
               }
+              Set<Poll> polls = jpa.getPolls();
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   Ticket ticket;
@@ -164,6 +147,7 @@ public class API {
               if (!req.params(":ticketId").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":ticketId"));
               }
+              Set<Poll> polls = jpa.getPolls();
               for (Poll poll : polls) {
                 // We found the selected Poll
                 if (req.params(":pollId").equals(poll.getId().toString())) {
@@ -190,6 +174,7 @@ public class API {
               if (!req.params(":pollId").matches("-?\\d+(\\.\\d+)?")) {
                 return String.format("The poll id \"%s\" is not a number!", req.params(":pollId"));
               }
+              Set<Poll> polls = jpa.getPolls();
               for (Poll poll : polls) {
                 // We found the selected Poll
                 if (req.params(":pollId").equals(poll.getId().toString())) {

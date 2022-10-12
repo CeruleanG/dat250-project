@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Ticket implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private static final AtomicLong atomicLong = new AtomicLong(0);
+    private Long id;
+
     private int voteNb;
 
     private UserProfile voter;
@@ -29,9 +29,7 @@ public class Ticket implements Serializable {
         this.id = id;
     }
 
-    public Ticket(){
-        this(atomicLong.incrementAndGet());
-    }
+    public Ticket(){}
 
     public String toJson()
     {

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,23 +17,21 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UserProfile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private static final AtomicLong atomicLong = new AtomicLong(0);
+    private Long id;
     private String login;
     private String pwd;
     
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner")
-    private Set<Poll> PollsOwned;
+    @OneToMany(mappedBy = "owner")
+    private Set<Poll> PollsOwned = new HashSet<>();
     
-    @ManyToMany(cascade = CascadeType.ALL,mappedBy = "participants")
-    private Set<Poll> PollsParticipated;
+    @ManyToMany(mappedBy = "participants")
+    private Set<Poll> PollsParticipated = new HashSet<>();
 
     public UserProfile(Long id){
         this.id = id;
     }
 
     public UserProfile(){
-        this(atomicLong.incrementAndGet());
     }
 
     public String toJson()

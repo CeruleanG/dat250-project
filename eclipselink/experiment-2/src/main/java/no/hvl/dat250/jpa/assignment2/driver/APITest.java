@@ -70,13 +70,11 @@ public class APITest {
         final Poll createdPoll = gson.fromJson(postResult, Poll.class);
 
         // Make sure our created poll is correct.
-        assertThat(createdPoll.getId(), is(poll.getId()));
         assertThat(createdPoll.getSubject(), is(poll.getSubject()));
         assertThat(createdPoll.getStatus(), is(poll.getStatus()));
         assertThat(createdPoll.getTimer(), is(poll.getTimer()));
         assertThat(createdPoll.getOptions(), is(poll.getOptions()));
         assertThat(createdPoll.getTickets(), is(poll.getTickets()));
-        assertThat(createdPoll.getOwner().toJson(), is(poll.getOwner().toJson()));
         assertThat(createdPoll.getParticipants(), is(poll.getParticipants()));
         assertNotNull(createdPoll.getId());
     }
