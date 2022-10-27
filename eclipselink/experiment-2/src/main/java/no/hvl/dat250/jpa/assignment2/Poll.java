@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
@@ -18,8 +17,8 @@ public class Poll implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String subject;
-    private int Status;
+    private String topic;
+    private int status;
     private boolean isPublic;
     private Long timer;
 

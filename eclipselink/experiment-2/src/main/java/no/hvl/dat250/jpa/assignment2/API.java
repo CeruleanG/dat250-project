@@ -26,6 +26,20 @@ public class API {
     DataJPA jpa = new DataJPA();
 
     //***** POLL *****\\
+    // Create a Poll
+    post(
+            "/polls",
+            (req, res) ->
+            {
+              Set<Poll> polls = jpa.getPolls();
+              Gson gson = new Gson();
+              Poll poll = gson.fromJson(req.body(), Poll.class);
+              polls.add(poll);
+              jpa.saveData(poll);
+              return poll.toJson();
+            }
+    );
+
     // Get Polls
     get(
             "/polls",
@@ -54,19 +68,31 @@ public class API {
             }
     );
 
-    // Create a Poll
-    post(
-            "/polls",
+    put(
+            "polls/:id",
             (req, res) ->
             {
-              Set<Poll> polls = jpa.getPolls();
-              Gson gson = new Gson();
-              Poll poll = gson.fromJson(req.body(), Poll.class);
-              polls.add(poll);
-
-              jpa.saveData(poll);
-
-              return poll.toJson();
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The poll id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<Poll> polls=jpa.getPolls();
+              for (Poll poll : polls) {
+                if (req.params(":id").equals(poll.getId().toString())) {
+                  Gson gson = new Gson();
+                  Poll fromPoll = gson.fromJson(req.body(), Poll.class);
+                  poll.setTopic(fromPoll.getTopic());
+                  poll.setStatus(fromPoll.getStatus());
+                  poll.setPublic(fromPoll.isPublic());
+                  poll.setTimer(fromPoll.getTimer());
+                  poll.setOptions(fromPoll.getOptions());
+                  poll.setTickets(fromPoll.getTickets());
+                  poll.setOwner(fromPoll.getOwner());
+                  poll.setParticipants(fromPoll.getParticipants());
+                  jpa.saveData(poll);
+                  return poll.toJson();
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
 
@@ -81,32 +107,18 @@ public class API {
               Set<Poll> polls = jpa.getPolls();
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
-                  polls.remove(poll);
-                  /*
-                  em.getTransaction().begin();
-                  em.persist(poll);
-                  em.getTransaction().commit();
-                  //em.close();
-                  */
+                  jpa.deleteData(poll);
                   return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
-
-    //********************
-    // TO DELETE
-    /*
-    int findId = req.params(":id");
-    em.createQuery("delete from Poll p where p.id=:findId").executeUpdate();
-    */
-    //********************
-
     //***** POLL *****\\
+
     //***** TICKET *****\\
     // Create a Ticket
-    put(
+    post(
             "/polls/:id/tickets",
             (req, res) ->
             {
@@ -121,14 +133,7 @@ public class API {
                   Gson gson = new Gson();
                   ticket = gson.fromJson(req.body(), Ticket.class);
                   poll.addTicket(ticket);
-
-                  /*
-                  em.getTransaction().begin();
-                  em.persist(ticket);
-                  em.getTransaction().commit();
-                  //em.close();
-
-                   */
+                  jpa.saveData(ticket);
                   return poll.toJson();
                 }
               }

@@ -31,6 +31,18 @@ public class DataJPA {
         else return -1;
     }
 
+    public int deleteData(Object jpadata)
+    {
+        if ((jpadata instanceof Poll) || (jpadata instanceof Ticket) || (jpadata instanceof UserProfile))
+        {
+            em.getTransaction().begin();
+            em.remove(jpadata);
+            em.getTransaction().commit();
+            return 1;
+        }
+        else return -1;
+    }
+
     public Set<Poll> getPolls()
     {
         Query q = em.createQuery("select t from Poll t");
@@ -43,4 +55,6 @@ public class DataJPA {
         Set<Ticket> tickets = new HashSet<>(q.getResultList());
         return tickets;
     }
+
+
 }

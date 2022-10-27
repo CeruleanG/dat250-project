@@ -39,7 +39,7 @@ public class APITest {
     public void testJPA()
     {
         Poll poll = new Poll();
-        poll.setSubject("My subject");
+        poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setTimer(666L);
@@ -54,7 +54,7 @@ public class APITest {
     @Test
     public void testCreatePoll() {
         Poll poll = new Poll();
-        poll.setSubject("My subject");
+        poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setTimer(666L);
@@ -70,7 +70,7 @@ public class APITest {
         final Poll createdPoll = gson.fromJson(postResult, Poll.class);
 
         // Make sure our created poll is correct.
-        assertThat(createdPoll.getSubject(), is(poll.getSubject()));
+        assertThat(createdPoll.getTopic(), is(poll.getTopic()));
         assertThat(createdPoll.getStatus(), is(poll.getStatus()));
         assertThat(createdPoll.getTimer(), is(poll.getTimer()));
         assertThat(createdPoll.getOptions(), is(poll.getOptions()));
@@ -124,7 +124,7 @@ public class APITest {
     public void testReadOnePoll() {
         // Save one poll.
         final Poll poll = new Poll();
-        poll.setSubject("My subject");
+        poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setTimer(666L);
@@ -144,7 +144,7 @@ public class APITest {
 //    assertThat(returnedPoll, is(createdPoll));
         // Make sure our created poll is correct.
         assertThat(returnedPoll.getId(), is(createdPoll.getId()));
-        assertThat(returnedPoll.getSubject(), is(createdPoll.getSubject()));
+        assertThat(returnedPoll.getTopic(), is(createdPoll.getTopic()));
         assertThat(returnedPoll.getStatus(), is(createdPoll.getStatus()));
         assertThat(returnedPoll.getTimer(), is(createdPoll.getTimer()));
         assertThat(returnedPoll.getOptions(), is(createdPoll.getOptions()));
@@ -158,7 +158,7 @@ public class APITest {
     public void testReadAllPoll() {
         // Save 2 polls.
         final Poll poll1 = new Poll();
-        poll1.setSubject("My subject");
+        poll1.setTopic("My subject");
         poll1.setStatus(1);
         poll1.setPublic(true);
         poll1.setTimer(666L);
@@ -168,7 +168,7 @@ public class APITest {
         poll1.setParticipants(new HashSet<>());
 
         final Poll poll2 = new Poll();
-        poll2.setSubject("My subject");
+        poll2.setTopic("My subject");
         poll2.setStatus(1);
         poll2.setPublic(true);
         poll2.setTimer(666L);
@@ -199,7 +199,7 @@ public class APITest {
     public void testDeletePoll() {
         // Save an element, which we can delete later.
         final Poll poll = new Poll();
-        poll.setSubject("My subject");
+        poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setTimer(666L);

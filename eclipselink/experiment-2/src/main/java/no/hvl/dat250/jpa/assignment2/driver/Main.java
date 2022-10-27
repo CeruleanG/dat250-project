@@ -35,7 +35,7 @@ public class Main {
         //poll.setId((long) 2);
         poll.setPublic(true);
         poll.setStatus(1);
-        poll.setSubject("What");
+        poll.setTopic("What");
         poll.setTimer((long) 1000);
         votePoll.setId((long) 3);
         Set<String> options = new HashSet<>();
