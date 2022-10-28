@@ -153,5 +153,52 @@ public class API {
               return String.format("User with the id \"%s\" not found!", req.params(":id"));
             }
     );
+
+    // Update a Poll with a given Id
+    put(
+            "users/:id",
+            (req, res) ->
+            {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The user id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<UserProfile> users=jpa.getUsers();
+              for (UserProfile user : users) {
+                if (req.params(":id").equals(user.getId().toString())) {
+                  Gson gson = new Gson();
+                  UserProfile fromUser = gson.fromJson(req.body(), UserProfile.class);
+                  user.setLogin(fromUser.getLogin());
+                  user.setPwd(fromUser.getPwd());
+                  user.setPollsOwned(fromUser.getPollsOwned());
+                  user.setPollsParticipated(fromUser.getPollsParticipated());
+
+                  jpa.saveData(user);
+                  return user.toJson();
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
+
+    // Delete a Poll with a given Id
+    delete(
+            "/users/:id",
+            (req, res) ->
+            {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The user id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<UserProfile> users=jpa.getUsers();
+              for (UserProfile user : users) {
+                if (req.params(":id").equals(user.getId().toString())) {
+                  jpa.deleteData(user);
+                  return user.toJson();
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
+    //****************** USER END ******************\\
+
   }
 }
