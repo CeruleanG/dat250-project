@@ -49,4 +49,11 @@ public class DataJPA {
         Set<Poll> polls = new HashSet<>(q.getResultList());
         return polls;
     }
+
+    public Set<UserProfile> getUsers()
+    {
+        Query q = em.createQuery("select t from UserProfile t");
+        Set<UserProfile> users = new HashSet<>(q.getResultList());
+        return users;
+    }
 }

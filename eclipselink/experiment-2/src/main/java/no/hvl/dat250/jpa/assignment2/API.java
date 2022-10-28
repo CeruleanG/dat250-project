@@ -25,22 +25,20 @@ public class API {
 
     DataJPA jpa = new DataJPA();
 
-    //***** POLL *****\\
+    //****************** POLL END ******************\\
     // Create a Poll
     post(
             "/polls",
             (req, res) ->
             {
-              Set<Poll> polls = jpa.getPolls();
               Gson gson = new Gson();
               Poll poll = gson.fromJson(req.body(), Poll.class);
-              polls.add(poll);
               jpa.saveData(poll);
               return poll.toJson();
             }
     );
 
-    // Get Polls
+    // Get all Polls
     get(
             "/polls",
             (req, res) ->
@@ -68,6 +66,7 @@ public class API {
             }
     );
 
+    // Update a Poll with a given Id
     put(
             "polls/:id",
             (req, res) ->
@@ -94,7 +93,7 @@ public class API {
             }
     );
 
-    // Delete a Poll
+    // Delete a Poll with a given Id
     delete(
             "/polls/:id",
             (req, res) ->
@@ -112,7 +111,47 @@ public class API {
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
-    //***** POLL *****\\
+    //****************** POLL END ******************\\
 
+    //***************** User Start *****************\\
+    //create a user
+    post(
+            "/users",
+            (req, res) ->
+            {
+              Gson gson = new Gson();
+              UserProfile user = gson.fromJson(req.body(), UserProfile.class);
+              jpa.saveData(user);
+              return user.toJson();
+            }
+    );
+
+    // Get all Users
+    get(
+            "/users",
+            (req, res) ->
+            {
+              Gson gson = new Gson();
+              return gson.toJson(jpa.getUsers());
+            }
+    );
+
+    // Get a Poll with a given Id
+    get(
+            "users/:id",
+            (req, res) ->
+            {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The user id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<UserProfile> users=jpa.getUsers();
+              for (UserProfile user : users) {
+                if (req.params(":id").equals(user.getId().toString())) {
+                  return user.toJson();
+                }
+              }
+              return String.format("User with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
   }
 }
