@@ -21,7 +21,7 @@ public class DataJPA {
     // -1=wrong class   1=success
     public int saveData(Object jpadata)
     {
-        if ((jpadata instanceof Poll) || (jpadata instanceof Ticket) || (jpadata instanceof UserProfile))
+        if ((jpadata instanceof Poll) || (jpadata instanceof UserProfile))
         {
             em.getTransaction().begin();
             em.persist(jpadata);
@@ -33,7 +33,7 @@ public class DataJPA {
 
     public int deleteData(Object jpadata)
     {
-        if ((jpadata instanceof Poll) || (jpadata instanceof Ticket) || (jpadata instanceof UserProfile))
+        if ((jpadata instanceof Poll) || (jpadata instanceof UserProfile))
         {
             em.getTransaction().begin();
             em.remove(jpadata);
@@ -49,12 +49,4 @@ public class DataJPA {
         Set<Poll> polls = new HashSet<>(q.getResultList());
         return polls;
     }
-    public Set<Ticket>getTickets()
-    {
-        Query q = em.createQuery("select t from Ticket t");
-        Set<Ticket> tickets = new HashSet<>(q.getResultList());
-        return tickets;
-    }
-
-
 }

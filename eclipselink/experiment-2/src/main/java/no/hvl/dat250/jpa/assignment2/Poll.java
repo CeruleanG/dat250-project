@@ -18,14 +18,11 @@ public class Poll implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String topic;
-    private int status;
+    private int yesNb;
+    private int noNb;
+    private int status; // -1 = closed; 0 = not open; 1 = open
     private boolean isPublic;
     private Long timer;
-
-    private Set<String> options = new HashSet<>();
-
-    @OneToMany(mappedBy = "fromPoll")
-    private Set<Ticket> tickets = new HashSet<>();
     
     @ManyToOne(cascade = CascadeType.PERSIST)
     private UserProfile owner;
@@ -46,7 +43,4 @@ public class Poll implements Serializable {
         return jsonIntString;
     }
 
-    public void addTicket(Ticket ticket){
-        this.tickets.add(ticket);
-    }
 }
