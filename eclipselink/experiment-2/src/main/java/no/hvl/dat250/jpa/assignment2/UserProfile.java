@@ -1,15 +1,16 @@
 package no.hvl.dat250.jpa.assignment2;
 
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Getter
@@ -22,17 +23,21 @@ public class UserProfile implements Serializable {
     private String pwd;
     
     @OneToMany(mappedBy = "owner")
+    @JsonManagedReference
+    //@JsonBackReference
     private Set<Poll> PollsOwned = new HashSet<>();
     
     @ManyToMany(mappedBy = "participants")
+    @JsonManagedReference
+    //@JsonBackReference
     private Set<Poll> PollsParticipated = new HashSet<>();
+
+
 
     public UserProfile(Long id){
         this.id = id;
     }
-
-    public UserProfile(){
-    }
+    public UserProfile(){}
 
     public String toJson()
     {

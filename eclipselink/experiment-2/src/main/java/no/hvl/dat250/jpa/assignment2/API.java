@@ -82,7 +82,6 @@ public class API {
                   poll.setTopic(fromPoll.getTopic());
                   poll.setStatus(fromPoll.getStatus());
                   poll.setPublic(fromPoll.isPublic());
-                  poll.setTimer(fromPoll.getTimer());
                   poll.setOwner(fromPoll.getOwner());
                   poll.setParticipants(fromPoll.getParticipants());
                   jpa.saveData(poll);
@@ -172,6 +171,62 @@ public class API {
                   user.setPollsOwned(fromUser.getPollsOwned());
                   user.setPollsParticipated(fromUser.getPollsParticipated());
 
+                  jpa.saveData(user);
+                  return user.toJson();
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
+
+    // make the User with "ID" the owner of the Poll "ID2"
+    put(
+            "users/:id/owns/:id2",
+            (req, res) ->
+            {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The user id \"%s\" is not a number!", req.params(":id"));
+              }
+              if (!req.params(":id2").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The Poll id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<UserProfile> users=jpa.getUsers();
+              Set<Poll> polls = jpa.getPolls();
+              for (UserProfile user : users) {
+                if (req.params(":id").equals(user.getId().toString())) {
+                  for (Poll poll : polls) {
+                    if (req.params(":id2").equals(poll.getId().toString())) {
+                      //poll.setOwner(user);
+                      user.getPollsOwned().add(poll);
+                    }
+                  }
+                  jpa.saveData(user);
+                  return user.toJson();
+                }
+              }
+              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+            }
+    );
+    put(
+            "users/:id/owned/:id2",
+            (req, res) ->
+            {
+              if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The user id \"%s\" is not a number!", req.params(":id"));
+              }
+              if (!req.params(":id2").matches("-?\\d+(\\.\\d+)?")) {
+                return String.format("The Poll id \"%s\" is not a number!", req.params(":id"));
+              }
+              Set<UserProfile> users=jpa.getUsers();
+              Set<Poll> polls = jpa.getPolls();
+              for (UserProfile user : users) {
+                if (req.params(":id").equals(user.getId().toString())) {
+                  for (Poll poll : polls) {
+                    if (req.params(":id2").equals(poll.getId().toString())) {
+                      poll.setOwner(user);
+                      //user.getPollsOwned().add(poll);
+                    }
+                  }
                   jpa.saveData(user);
                   return user.toJson();
                 }

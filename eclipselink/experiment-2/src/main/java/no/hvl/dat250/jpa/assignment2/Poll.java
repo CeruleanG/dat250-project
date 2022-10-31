@@ -2,6 +2,9 @@ package no.hvl.dat250.jpa.assignment2;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,12 +25,15 @@ public class Poll implements Serializable {
     private int noNb;
     private int status; // -1 = closed; 0 = not open; 1 = open
     private boolean isPublic;
-    private Long timer;
     
     @ManyToOne(cascade = CascadeType.PERSIST)
+    //@JsonManagedReference
+    //@JsonBackReference
     private UserProfile owner;
     
     @ManyToMany(cascade = CascadeType.PERSIST)
+    //@JsonManagedReference
+    //@JsonBackReference
     private Set<UserProfile> participants = new HashSet<>();
 
     public Poll(Long id){

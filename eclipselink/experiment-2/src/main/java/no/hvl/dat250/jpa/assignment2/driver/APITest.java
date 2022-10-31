@@ -42,7 +42,6 @@ public class APITest {
         poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
-        poll.setTimer(666L);
         poll.setOwner(new UserProfile());
         poll.setParticipants(new HashSet<>());
 
@@ -55,7 +54,6 @@ public class APITest {
         poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
-        poll.setTimer(666L);
         poll.setOwner(new UserProfile());
         poll.setParticipants(new HashSet<>());
 
@@ -68,7 +66,6 @@ public class APITest {
         // Make sure our created poll is correct.
         assertThat(createdPoll.getTopic(), is(poll.getTopic()));
         assertThat(createdPoll.getStatus(), is(poll.getStatus()));
-        assertThat(createdPoll.getTimer(), is(poll.getTimer()));
         assertThat(createdPoll.getParticipants(), is(poll.getParticipants()));
         assertNotNull(createdPoll.getId());
     }
@@ -121,7 +118,6 @@ public class APITest {
         poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
-        poll.setTimer(666L);
         poll.setOwner(new UserProfile());
         poll.setParticipants(new HashSet<>());
         final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
@@ -138,7 +134,6 @@ public class APITest {
         assertThat(returnedPoll.getId(), is(createdPoll.getId()));
         assertThat(returnedPoll.getTopic(), is(createdPoll.getTopic()));
         assertThat(returnedPoll.getStatus(), is(createdPoll.getStatus()));
-        assertThat(returnedPoll.getTimer(), is(createdPoll.getTimer()));
         assertThat(returnedPoll.getOwner().toJson(), is(createdPoll.getOwner().toJson()));
         assertThat(returnedPoll.getParticipants(), is(createdPoll.getParticipants()));
         assertNotNull(returnedPoll.getId());
@@ -151,7 +146,6 @@ public class APITest {
         poll1.setTopic("My subject");
         poll1.setStatus(1);
         poll1.setPublic(true);
-        poll1.setTimer(666L);
         poll1.setOwner(new UserProfile());
         poll1.setParticipants(new HashSet<>());
 
@@ -159,7 +153,6 @@ public class APITest {
         poll2.setTopic("My subject");
         poll2.setStatus(1);
         poll2.setPublic(true);
-        poll2.setTimer(666L);
         poll2.setOwner(new UserProfile());
         poll2.setParticipants(new HashSet<>());
 
@@ -188,7 +181,6 @@ public class APITest {
         poll.setTopic("My subject");
         poll.setStatus(1);
         poll.setPublic(true);
-        poll.setTimer(666L);
         poll.setOwner(new UserProfile());
         poll.setParticipants(new HashSet<>());
         final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
