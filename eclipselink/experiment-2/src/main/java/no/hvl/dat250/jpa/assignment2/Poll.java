@@ -2,20 +2,18 @@ package no.hvl.dat250.jpa.assignment2;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Poll implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +25,12 @@ public class Poll implements Serializable {
     private boolean isPublic;
     
     @ManyToOne(cascade = CascadeType.PERSIST)
-    //@JsonManagedReference
-    //@JsonBackReference
+    @JsonIncludeProperties({"id"})
     private UserProfile owner;
     
     @ManyToMany(cascade = CascadeType.PERSIST)
-    //@JsonManagedReference
-    //@JsonBackReference
-    private Set<UserProfile> participants = new HashSet<>();
+    @JsonIncludeProperties({"id"})
+    private List<UserProfile> participants;
 
     public Poll(Long id){
         this.id = id;

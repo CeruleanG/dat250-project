@@ -43,7 +43,6 @@ public class APITest {
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setOwner(new UserProfile());
-        poll.setParticipants(new HashSet<>());
 
         DataJPA jpa = new DataJPA();
         jpa.saveData(poll);
@@ -55,7 +54,6 @@ public class APITest {
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setOwner(new UserProfile());
-        poll.setParticipants(new HashSet<>());
 
         // Execute post request
         final String postResult = doPostRequest(poll);
@@ -119,7 +117,6 @@ public class APITest {
         poll.setStatus(1);
         poll.setPublic(true);
         poll.setOwner(new UserProfile());
-        poll.setParticipants(new HashSet<>());
         final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
 
         // Execute get request
@@ -147,14 +144,12 @@ public class APITest {
         poll1.setStatus(1);
         poll1.setPublic(true);
         poll1.setOwner(new UserProfile());
-        poll1.setParticipants(new HashSet<>());
 
         final Poll poll2 = new Poll();
         poll2.setTopic("My subject");
         poll2.setStatus(1);
         poll2.setPublic(true);
         poll2.setOwner(new UserProfile());
-        poll2.setParticipants(new HashSet<>());
 
         final Poll createdPoll1 = gson.fromJson(doPostRequest(poll1), Poll.class);
         final Poll createdPoll2 = gson.fromJson(doPostRequest(poll2), Poll.class);
@@ -177,26 +172,7 @@ public class APITest {
     @Test
     public void testDeletePoll() {
         // Save an element, which we can delete later.
-        final Poll poll = new Poll();
-        poll.setTopic("My subject");
-        poll.setStatus(1);
-        poll.setPublic(true);
-        poll.setOwner(new UserProfile());
-        poll.setParticipants(new HashSet<>());
-        final Poll createdPoll = gson.fromJson(doPostRequest(poll), Poll.class);
 
-        final List<Poll> pollsBeforeDelete = parsePolls(doGetRequestPoll());
-
-        // Execute delete request
-        doDeleteRequest(createdPoll.getId());
-
-        final List<Poll> pollsAfterDelete = parsePolls(doGetRequestPoll());
-
-        assertTrue(pollsBeforeDelete.contains(createdPoll));
-        // Poll not contained anymore.
-        assertFalse(pollsAfterDelete.contains(createdPoll));
-        // The size was reduced by one due to the deletion.
-        assertThat(pollsBeforeDelete.size() - 1, is(pollsAfterDelete.size()));
     }
 
     private String doDeleteRequest(Long pollId) {

@@ -8,6 +8,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import static spark.Spark.*;
 
@@ -24,6 +26,7 @@ public class API {
     after((req, res) -> res.type("application/json"));
 
     DataJPA jpa = new DataJPA();
+    ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
     //****************** POLL END ******************\\
     // Create a Poll
@@ -34,7 +37,8 @@ public class API {
               Gson gson = new Gson();
               Poll poll = gson.fromJson(req.body(), Poll.class);
               jpa.saveData(poll);
-              return poll.toJson();
+              return ow.writeValueAsString(poll);
+              //return poll.toJson();
             }
     );
 
@@ -44,7 +48,8 @@ public class API {
             (req, res) ->
             {
               Gson gson = new Gson();
-              return gson.toJson(jpa.getPolls());
+              return ow.writeValueAsString(jpa.getPolls());
+              //return gson.toJson(jpa.getPolls());
             }
     );
 
@@ -59,7 +64,8 @@ public class API {
               Set<Poll> polls=jpa.getPolls();
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
-                  return poll.toJson();
+                  return ow.writeValueAsString(poll);
+                  //return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -85,7 +91,8 @@ public class API {
                   poll.setOwner(fromPoll.getOwner());
                   poll.setParticipants(fromPoll.getParticipants());
                   jpa.saveData(poll);
-                  return poll.toJson();
+                  return ow.writeValueAsString(poll);
+                  //return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -104,7 +111,8 @@ public class API {
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   jpa.deleteData(poll);
-                  return poll.toJson();
+                  return ow.writeValueAsString(poll);
+                  //return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -121,7 +129,7 @@ public class API {
               Gson gson = new Gson();
               UserProfile user = gson.fromJson(req.body(), UserProfile.class);
               jpa.saveData(user);
-              return user.toJson();
+              return ow.writeValueAsString(user);
             }
     );
 
@@ -131,7 +139,8 @@ public class API {
             (req, res) ->
             {
               Gson gson = new Gson();
-              return gson.toJson(jpa.getUsers());
+              return ow.writeValueAsString(jpa.getUsers());
+              //return gson.toJson(jpa.getUsers());
             }
     );
 
@@ -146,7 +155,8 @@ public class API {
               Set<UserProfile> users=jpa.getUsers();
               for (UserProfile user : users) {
                 if (req.params(":id").equals(user.getId().toString())) {
-                  return user.toJson();
+                  return ow.writeValueAsString(user);
+                  //return user.toJson();
                 }
               }
               return String.format("User with the id \"%s\" not found!", req.params(":id"));
@@ -172,7 +182,8 @@ public class API {
                   user.setPollsParticipated(fromUser.getPollsParticipated());
 
                   jpa.saveData(user);
-                  return user.toJson();
+                  return ow.writeValueAsString(user);
+                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -196,19 +207,23 @@ public class API {
                 if (req.params(":id").equals(user.getId().toString())) {
                   for (Poll poll : polls) {
                     if (req.params(":id2").equals(poll.getId().toString())) {
-                      //poll.setOwner(user);
-                      user.getPollsOwned().add(poll);
+                      poll.setOwner(user);
+                      if(!user.getPollsOwned().contains(poll))
+                        user.getPollsOwned().add(poll);
                     }
                   }
                   jpa.saveData(user);
-                  return user.toJson();
+                  return ow.writeValueAsString(user);
+                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
             }
     );
+
+    // make the User with "ID" a participant of the Poll "ID2"
     put(
-            "users/:id/owned/:id2",
+            "users/:id/participates/:id2",
             (req, res) ->
             {
               if (!req.params(":id").matches("-?\\d+(\\.\\d+)?")) {
@@ -223,12 +238,15 @@ public class API {
                 if (req.params(":id").equals(user.getId().toString())) {
                   for (Poll poll : polls) {
                     if (req.params(":id2").equals(poll.getId().toString())) {
-                      poll.setOwner(user);
-                      //user.getPollsOwned().add(poll);
+                      if(!poll.getParticipants().contains(user))
+                        poll.getParticipants().add(user);
+                      if(!user.getPollsParticipated().contains(poll))
+                        user.getPollsParticipated().add(poll);
                     }
                   }
                   jpa.saveData(user);
-                  return user.toJson();
+                  return ow.writeValueAsString(user);
+                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -247,7 +265,8 @@ public class API {
               for (UserProfile user : users) {
                 if (req.params(":id").equals(user.getId().toString())) {
                   jpa.deleteData(user);
-                  return user.toJson();
+                  return ow.writeValueAsString(user);
+                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));

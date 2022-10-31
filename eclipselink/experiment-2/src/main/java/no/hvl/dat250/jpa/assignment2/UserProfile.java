@@ -1,20 +1,18 @@
 package no.hvl.dat250.jpa.assignment2;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserProfile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +21,12 @@ public class UserProfile implements Serializable {
     private String pwd;
     
     @OneToMany(mappedBy = "owner")
-    @JsonManagedReference
-    //@JsonBackReference
-    private Set<Poll> PollsOwned = new HashSet<>();
+    @JsonIncludeProperties({"id"})
+    private List<Poll> PollsOwned ;
     
     @ManyToMany(mappedBy = "participants")
-    @JsonManagedReference
-    //@JsonBackReference
-    private Set<Poll> PollsParticipated = new HashSet<>();
+    @JsonIncludeProperties({"id"})
+    private List<Poll> PollsParticipated ;
 
 
 
