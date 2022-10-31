@@ -1,15 +1,14 @@
-package no.hvl.dat250.jpa.assignment2;
+package no.hvl.dat250.jpa.assignment2.driver;
 
 import com.google.gson.Gson;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import no.hvl.dat250.jpa.assignment2.tools.DataJPA;
+import no.hvl.dat250.jpa.assignment2.Poll;
+import no.hvl.dat250.jpa.assignment2.UserProfile;
 
 import static spark.Spark.*;
 
@@ -25,8 +24,8 @@ public class API {
     }
     after((req, res) -> res.type("application/json"));
 
-    DataJPA jpa = new DataJPA();
     ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    DataJPA jpa = new DataJPA();
 
     //****************** POLL END ******************\\
     // Create a Poll

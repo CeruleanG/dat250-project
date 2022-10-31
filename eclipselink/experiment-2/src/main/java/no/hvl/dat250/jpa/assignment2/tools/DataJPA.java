@@ -1,4 +1,7 @@
-package no.hvl.dat250.jpa.assignment2;
+package no.hvl.dat250.jpa.assignment2.tools;
+
+import no.hvl.dat250.jpa.assignment2.Poll;
+import no.hvl.dat250.jpa.assignment2.UserProfile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

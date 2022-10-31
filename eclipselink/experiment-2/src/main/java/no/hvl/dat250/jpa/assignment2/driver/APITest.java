@@ -2,8 +2,7 @@ package no.hvl.dat250.jpa.assignment2.driver;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import no.hvl.dat250.jpa.assignment2.API;
-import no.hvl.dat250.jpa.assignment2.DataJPA;
+import no.hvl.dat250.jpa.assignment2.tools.DataJPA;
 import no.hvl.dat250.jpa.assignment2.Poll;
 import no.hvl.dat250.jpa.assignment2.UserProfile;
 import okhttp3.*;
@@ -12,7 +11,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
