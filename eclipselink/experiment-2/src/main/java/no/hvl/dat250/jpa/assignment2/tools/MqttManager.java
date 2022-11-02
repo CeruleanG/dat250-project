@@ -8,6 +8,7 @@ authentifications to the application.
 
 The website used as sources are the following :
   _ https://www.hivemq.com/blog/how-to-get-started-with-mqtt/
+  _ https://github.com/hivemq/hivemq-mqtt-client/ // tree/master/src/main/java/com/hivemq/client/mqtt/mqtt5
 
 The documents used as sources are the following :
   _ hivemq-ebook-mqtt-essentials from https://mqtt.org/
@@ -17,5 +18,20 @@ We will use : HiveMq as broker and as Browser Client (https://www.hivemq.com/pub
   psw : projetDeMerde!666
 */
 
-public class MqttManager {
+
+
+class MqttManager {
+
+  private final String host = "679f8737b6f343edbe51d41d9f6dbc53.s1.eu.hivemq.cloud";  // https://console.hivemq.cloud/clusters
+                                                                                      // Connection Settings -> Cluster URL
+  private final String username = "DAT250_projectChLeRu"; // your credentials
+  private final String password = "projetDeMerde!666";
+  private final String port = "8883"; // https://console.hivemq.cloud/clusters
+                                      // Connection Settings -> Port
+
+  protected final String getHost(){return this.host;}
+  protected final String getPort(){return this.port;}
+  protected final String getUsername(){return this.username;}
+  protected final String getPassword(){return this.password;}
+
 }
