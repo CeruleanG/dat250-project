@@ -21,7 +21,7 @@ public class Poll implements Serializable {
     private String topic;
     private int yesNb;
     private int noNb;
-    private int status; // -1 = closed; 0 = not open; 1 = open
+    private int status; // 0 = closed; 1 = open
     private boolean isPublic;
     
     @ManyToOne(cascade = CascadeType.PERSIST)

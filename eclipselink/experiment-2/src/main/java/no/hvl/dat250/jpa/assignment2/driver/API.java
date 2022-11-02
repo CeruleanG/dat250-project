@@ -13,9 +13,6 @@ import no.hvl.dat250.jpa.assignment2.UserProfile;
 import static spark.Spark.*;
 
 public class API {
-  private static final String PERSISTENCE_UNIT_NAME = "miniproject";
-  private static EntityManagerFactory factory;
-
   public static void main(String[] args) {
     if (args.length > 0) {
       port(Integer.parseInt(args[0]));
