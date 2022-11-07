@@ -6,7 +6,11 @@ import org.junit.Test;
 public class MqTest {
 
   @Test
-  public void testConnectToServer(){
-    MqClient mqClient = new MqClient("Obiwan Kenobi");
+  public void testConnectToServer() {
+    MqClient publisher = new MqClient();
+    MqClient subscriber = new MqClient();
+
+    publisher.publishBlocking();
+    subscriber.subscribeBlocking();
   }
 }

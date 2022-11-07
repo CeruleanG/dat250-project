@@ -1,40 +1,58 @@
 package no.hvl.dat250.jpa.assignment2.tools;
 
+import com.hivemq.client.mqtt.MqttClient;
+import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
+import com.hivemq.client.mqtt.MqttWebSocketConfig;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
+import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MqClient {
-  private final MqttManager mqttManager = new MqttManager();
-  private final Mqtt5Client client;
+  protected final MqttManager mqttManager = new MqttManager();
+  private Mqtt5Client client = MqttClient.builder()
+          .useMqttVersion5()
+          .serverHost(mqttManager.getHost()) //.serverHost("broker.hivemq.com")
+          .serverPort(Integer.parseInt(mqttManager.getPort()))
+          .sslWithDefaultConfig()
+          .webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
+          .identifier(UUID.randomUUID().toString())
+          .build();
 
-  public MqClient(String id){
-    this.client = Mqtt5Client.builder()
-            .identifier(id) // use a unique identifier
-            .serverHost(mqttManager.getHost())
-            .automaticReconnectWithDefaultConfig() // the client automatically reconnects
-            .serverPort(Integer.parseInt(mqttManager.getPort())) // this is the port of your cluster, for mqtt it is the default port 8883
-            .sslWithDefaultConfig() // establish a secured connection to HiveMQ Cloud using TLS
-            .build();
-    /*
-    this.client.toBlocking().connectWith()
-            .simpleAuth() // using authentication, which is required for a secure connection
-            .username(mqttManager.getUsername()) // use the username and password you just created
-            .password(mqttManager.getPassword().getBytes(StandardCharsets.UTF_8))
+  public void publishBlocking(){
+    client.toBlocking().connectWith()
+            .simpleAuth()
+            .username(mqttManager.getUsername())
+            .password(StandardCharsets.UTF_8.encode(mqttManager.getPassword()))
             .applySimpleAuth()
-            .willPublish() // the last message, before the client disconnects
-            .topic("home/will")
-            .payload("sensor gone".getBytes())
-            .applyWillPublish()
             .send();
-     */
-    this.client.toBlocking().connectWith()
-            .simpleAuth() // using authentication, which is required for a secure connection
-            .username(mqttManager.getUsername()) // use the username and password you just created
-            .password(mqttManager.getPassword().getBytes(StandardCharsets.UTF_8))
-            .applySimpleAuth();
+
+    client.toBlocking().publishWith().topic("test/topic").qos(MqttQos.AT_LEAST_ONCE).payload("1".getBytes()).send();
+    client.toBlocking().disconnect();
   }
+  public void subscribeBlocking(){
+    client.toBlocking().connectWith()
+            .simpleAuth()
+            .username(mqttManager.getUsername())
+            .password(StandardCharsets.UTF_8.encode(mqttManager.getPassword()))
+            .applySimpleAuth()
+            .send();
 
+    try (final Mqtt5BlockingClient.Mqtt5Publishes publishes = client.toBlocking().publishes(MqttGlobalPublishFilter.ALL)) {
 
+      client.toBlocking().subscribeWith().topicFilter("test/topic").qos(MqttQos.AT_LEAST_ONCE).send();
+
+      publishes.receive(1, TimeUnit.SECONDS).ifPresent(System.out::println);
+      publishes.receive(100, TimeUnit.MILLISECONDS).ifPresent(System.out::println);
+
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    } finally {
+      client.toBlocking().disconnect();
+    }
+  }
 
 }
