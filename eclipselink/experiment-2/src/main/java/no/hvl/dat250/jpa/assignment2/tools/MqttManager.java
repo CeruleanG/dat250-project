@@ -8,8 +8,10 @@ authentifications to the application.
 
 The website used as sources are the following :
   _ https://www.hivemq.com/blog/how-to-get-started-with-mqtt/
-  _ https://github.com/hivemq/hivemq-mqtt-client/ // tree/master/src/main/java/com/hivemq/client/mqtt/mqtt5
+  _ https://github.com/hivemq/hivemq-mqtt-client/
   _ (Getting Started ) https://console.hivemq.cloud/clients/websocket-java?uuid=679f8737b6f343edbe51d41d9f6dbc53
+  _ (Connect to HiveMq cluster) https://www.hivemq.com/blog/connecting-eclipse-paho-mqtt-java-client-hivemq-cloud-broker/
+  _ https://github.com/hivemq/mqtt-cli
 
 The documents used as sources are the following :
   _ hivemq-ebook-mqtt-essentials from https://mqtt.org/
@@ -34,5 +36,4 @@ class MqttManager {
   protected final String getPort(){return this.port;}
   protected final String getUsername(){return this.username;}
   protected final String getPassword(){return this.password;}
-
 }

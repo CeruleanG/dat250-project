@@ -1,58 +1,77 @@
 package no.hvl.dat250.jpa.assignment2.tools;
 
-import com.hivemq.client.mqtt.MqttClient;
-import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
-import com.hivemq.client.mqtt.MqttWebSocketConfig;
-import com.hivemq.client.mqtt.datatypes.MqttQos;
-import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
-import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
-
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import javax.net.ssl.SSLSocketFactory;
+import java.util.Arrays;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqClient {
   protected final MqttManager mqttManager = new MqttManager();
-  private Mqtt5Client client = MqttClient.builder()
-          .useMqttVersion5()
-          .serverHost(mqttManager.getHost()) //.serverHost("broker.hivemq.com")
-          .serverPort(Integer.parseInt(mqttManager.getPort()))
-          .sslWithDefaultConfig()
-          .webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
-          .identifier(UUID.randomUUID().toString())
-          .build();
+  private MqttClient mqttClient;
+  private Boolean connected = false;
 
-  public void publishBlocking(){
-    client.toBlocking().connectWith()
-            .simpleAuth()
-            .username(mqttManager.getUsername())
-            .password(StandardCharsets.UTF_8.encode(mqttManager.getPassword()))
-            .applySimpleAuth()
-            .send();
+  public MqClient() throws MqttException {
+    this.mqttClient = new MqttClient(
+            "ssl://" + mqttManager.getHost() + ":" + mqttManager.getPort(), // serverURI in format:
+            // "protocol://name:port"
+            MqttClient.generateClientId(), // ClientId
+            new MemoryPersistence()); // Persistence
 
-    client.toBlocking().publishWith().topic("test/topic").qos(MqttQos.AT_LEAST_ONCE).payload("1".getBytes()).send();
-    client.toBlocking().disconnect();
-  }
-  public void subscribeBlocking(){
-    client.toBlocking().connectWith()
-            .simpleAuth()
-            .username(mqttManager.getUsername())
-            .password(StandardCharsets.UTF_8.encode(mqttManager.getPassword()))
-            .applySimpleAuth()
-            .send();
-
-    try (final Mqtt5BlockingClient.Mqtt5Publishes publishes = client.toBlocking().publishes(MqttGlobalPublishFilter.ALL)) {
-
-      client.toBlocking().subscribeWith().topicFilter("test/topic").qos(MqttQos.AT_LEAST_ONCE).send();
-
-      publishes.receive(1, TimeUnit.SECONDS).ifPresent(System.out::println);
-      publishes.receive(100, TimeUnit.MILLISECONDS).ifPresent(System.out::println);
-
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    } finally {
-      client.toBlocking().disconnect();
-    }
+    this.setCallback();
+    this.connectClient();
   }
 
+  final protected void connectClient() throws MqttException {
+    MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+    mqttConnectOptions.setUserName(mqttManager.getUsername());
+    mqttConnectOptions.setPassword(mqttManager.getPassword().toCharArray());
+    // using the default socket factory
+    mqttConnectOptions.setSocketFactory(SSLSocketFactory.getDefault());
+    this.mqttClient.connect(mqttConnectOptions);
+    this.connected = true;
+  }
+
+  final public void disconnectClient() throws MqttException {
+    this.mqttClient.disconnect();
+  }
+
+  public void setCallback(){
+    this.mqttClient.setCallback(new MqttCallback() {
+
+      @Override
+      // Called when the client lost the connection to the broker
+      public void connectionLost(Throwable cause) {
+        System.out.println("client lost connection " + cause);
+      }
+
+      @Override
+      public void messageArrived(String topic, MqttMessage message) {
+        System.out.println(topic + ": " + Arrays.toString(message.getPayload()));
+      }
+
+      @Override
+      // Called when an outgoing publish is complete
+      public void deliveryComplete(IMqttDeliveryToken token) {
+        System.out.println("delivery complete " + token);
+      }
+    });
+  }
+
+  public void subscribe(String topic) throws MqttException {
+    if(!isConnected()) this.connectClient();
+    mqttClient.subscribe(topic, 1); // subscribe to everything with QoS = 1
+  }
+
+  public void publish(String topic, String msg) throws MqttException {
+    if(!isConnected()) this.connectClient();
+    mqttClient.publish(
+            topic,
+            msg.getBytes(),
+            2,
+            false);
+  }
+  private Boolean isConnected(){
+    return this.isConnected();
+  }
 }
