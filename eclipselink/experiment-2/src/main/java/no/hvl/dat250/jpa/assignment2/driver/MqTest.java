@@ -17,6 +17,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqTest {
 
+  // When everything will work, remove this test
   @Test
   public void testGettingStarted() throws MqttException {
 
@@ -74,6 +75,7 @@ public class MqTest {
     MqClient subscriber = new MqClient();
     MqClient publisher = new MqClient();
 
-
+    subscriber.subscribe("#");
+    publisher.publish("test/topic", "I am the msg");
   }
 }
