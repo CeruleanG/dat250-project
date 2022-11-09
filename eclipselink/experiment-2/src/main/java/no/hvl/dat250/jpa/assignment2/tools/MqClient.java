@@ -18,7 +18,7 @@ public class MqClient {
             MqttClient.generateClientId(), // ClientId
             new MemoryPersistence()); // Persistence
 
-    this.setCallback();
+    //this.mqttClient.setCallback();
     this.connectClient();
   }
 
@@ -36,38 +36,38 @@ public class MqClient {
     this.mqttClient.disconnect();
   }
 
-  public void setCallback(){
-    this.mqttClient.setCallback(new MqttCallback() {
-
-      @Override
-      // Called when the client lost the connection to the broker
-      public void connectionLost(Throwable cause) {
-        System.out.println("client lost connection " + cause);
-      }
-
-      @Override
-      public void messageArrived(String topic, MqttMessage message) {
-        System.out.println(topic + ": " + Arrays.toString(message.getPayload()));
-      }
-
-      @Override
-      // Called when an outgoing publish is complete
-      public void deliveryComplete(IMqttDeliveryToken token) {
-        System.out.println("delivery complete " + token);
-      }
-    });
-  }
+//  public void setCallback(){
+//    this.mqttClient.setCallback(new MqttCallback() {
+//
+//      @Override
+//      // Called when the client lost the connection to the broker
+//      public void connectionLost(Throwable cause) {
+//        System.out.println("client lost connection " + cause);
+//      }
+//
+//      @Override
+//      public void messageArrived(String topic, MqttMessage message) {
+//        System.out.println(topic + ": " + Arrays.toString(message.getPayload()));
+//      }
+//
+//      @Override
+//      // Called when an outgoing publish is complete
+//      public void deliveryComplete(IMqttDeliveryToken token) {
+//        System.out.println("delivery complete " + token);
+//      }
+//    });
+//  }
 
   public void subscribe(String topic) throws MqttException {
     if(!isConnected()) this.connectClient();
-    mqttClient.subscribe(topic, 1); // subscribe to everything with QoS = 1
+    this.mqttClient.subscribe(topic, 1); // subscribe to everything with QoS = 1
   }
 
   public void publish(String topic, String msg) throws MqttException {
     if(!isConnected()) this.connectClient();
-    mqttClient.publish(
+    this.mqttClient.publish(
             topic,
-            msg.getBytes(),
+            msg.getBytes(UTF_8),
             2,
             false);
   }
