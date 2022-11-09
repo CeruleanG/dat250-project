@@ -7,7 +7,7 @@ import java.util.Arrays;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqClient {
-  protected final MqttManager mqttManager = new MqttManager();
+  protected static final MqttManager mqttManager = new MqttManager();
   private MqttClient mqttClient;
   private Boolean connected = false;
 
@@ -72,6 +72,6 @@ public class MqClient {
             false);
   }
   private Boolean isConnected(){
-    return this.isConnected();
+    return this.connected;
   }
 }

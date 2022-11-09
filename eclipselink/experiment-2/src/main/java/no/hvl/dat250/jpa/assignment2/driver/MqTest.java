@@ -17,8 +17,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqTest {
 
+  public static void main(String[] args) throws MqttException, InterruptedException {
+    //testGettingStarted();
+    //testConnectToServer();
+    testPublishAndSubscribe();
+  }
+
   // When everything will work, remove this test
-  @Test
+  //@Test
   public void testGettingStarted() throws MqttException {
 
       MqttClient client = new MqttClient(
@@ -63,19 +69,23 @@ public class MqTest {
       client.disconnect();
   }
 
-  @Test
-  public void testConnectToServer() throws MqttException, InterruptedException {
+  //@Test
+  public static void testConnectToServer() throws MqttException, InterruptedException {
     MqClient mqClient = new MqClient();
     sleep(10000);
     mqClient.disconnectClient();
   }
 
-  @Test
-  public void testPublishAndSubscribe() throws MqttException {
+  //@Test
+  public static void testPublishAndSubscribe() throws MqttException, InterruptedException {
     MqClient subscriber = new MqClient();
     MqClient publisher = new MqClient();
 
-    subscriber.subscribe("#");
+    subscriber.subscribe("test/topic");
     publisher.publish("test/topic", "I am the msg");
+    sleep(5000);
+    publisher.disconnectClient();
+    sleep(5000);
+    subscriber.disconnectClient();
   }
 }

@@ -25,11 +25,11 @@ We will use : HiveMq as broker and as Browser Client (https://www.hivemq.com/pub
 
 class MqttManager {
 
-  private final String host = "679f8737b6f343edbe51d41d9f6dbc53.s1.eu.hivemq.cloud";  // https://console.hivemq.cloud/clusters
+  private static final String host = "679f8737b6f343edbe51d41d9f6dbc53.s1.eu.hivemq.cloud";  // https://console.hivemq.cloud/clusters
                                                                                       // Connection Settings -> Cluster URL
-  private final String username = "DAT250_projectChLeRu"; // your credentials
-  private final String password = "projetDeMerde!666";
-  private final String port = "8883"; // https://console.hivemq.cloud/clusters
+  private static final String username = "DAT250_projectChLeRu"; // your credentials
+  private static final String password = "projetDeMerde!666";
+  private static final String port = "8883"; // https://console.hivemq.cloud/clusters
                                       // Connection Settings -> Port
 
   protected final String getHost(){return this.host;}
