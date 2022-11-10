@@ -12,6 +12,7 @@ The website used as sources are the following :
   _ (Getting Started ) https://console.hivemq.cloud/clients/websocket-java?uuid=679f8737b6f343edbe51d41d9f6dbc53
   _ (Connect to HiveMq cluster) https://www.hivemq.com/blog/connecting-eclipse-paho-mqtt-java-client-hivemq-cloud-broker/
   _ https://github.com/hivemq/mqtt-cli
+  _ (encode and decode) https://devqa.io/encode-decode-json-byte-array/
 
 The documents used as sources are the following :
   _ hivemq-ebook-mqtt-essentials from https://mqtt.org/
@@ -22,18 +23,29 @@ We will use : HiveMq as broker and as Browser Client (https://www.hivemq.com/pub
 */
 
 
-
 class MqttManager {
 
   private static final String host = "679f8737b6f343edbe51d41d9f6dbc53.s1.eu.hivemq.cloud";  // https://console.hivemq.cloud/clusters
-                                                                                      // Connection Settings -> Cluster URL
+  // Connection Settings -> Cluster URL
   private static final String username = "DAT250_projectChLeRu"; // your credentials
   private static final String password = "projetDeMerde!666";
   private static final String port = "8883"; // https://console.hivemq.cloud/clusters
-                                      // Connection Settings -> Port
+  // Connection Settings -> Port
 
-  protected final String getHost(){return this.host;}
-  protected final String getPort(){return this.port;}
-  protected final String getUsername(){return this.username;}
-  protected final String getPassword(){return this.password;}
+  protected final String getHost() {
+    return this.host;
+  }
+
+  protected final String getPort() {
+    return this.port;
+  }
+
+  protected final String getUsername() {
+    return this.username;
+  }
+
+  protected final String getPassword() {
+    return this.password;
+  }
+
 }

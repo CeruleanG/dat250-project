@@ -1,15 +1,23 @@
 package no.hvl.dat250.jpa.assignment2.tools;
 
+import no.hvl.dat250.jpa.assignment2.Poll;
+import no.hvl.dat250.jpa.assignment2.UserProfile;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 import javax.net.ssl.SSLSocketFactory;
+import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqClient {
   protected static final MqttManager mqttManager = new MqttManager();
-  private MqttClient mqttClient;
+  private final MqttClient mqttClient;
   private Boolean connected = false;
+  private String buffer = "";
 
   public MqClient() throws MqttException {
     this.mqttClient = new MqttClient(
@@ -28,6 +36,7 @@ public class MqClient {
     mqttConnectOptions.setPassword(mqttManager.getPassword().toCharArray());
     // using the default socket factory
     mqttConnectOptions.setSocketFactory(SSLSocketFactory.getDefault());
+    mqttConnectOptions.setAutomaticReconnect(true);
     this.mqttClient.connect(mqttConnectOptions);
     this.connected = true;
   }
@@ -36,7 +45,7 @@ public class MqClient {
     this.mqttClient.disconnect();
   }
 
-  public void setCallback(){
+  public void setCallback() {
     this.mqttClient.setCallback(new MqttCallback() {
 
       @Override
@@ -59,19 +68,58 @@ public class MqClient {
   }
 
   public void subscribe(String topic) throws MqttException {
-    if(!isConnected()) this.connectClient();
+    if (!isConnected()) this.connectClient();
     this.mqttClient.subscribe(topic, 1); // subscribe to everything with QoS = 1
   }
 
   public void publish(String topic, String msg) throws MqttException {
-    if(!isConnected()) this.connectClient();
+    if (!isConnected()) this.connectClient();
     this.mqttClient.publish(
             topic,
             msg.getBytes(UTF_8),
             2,
             false);
   }
-  private Boolean isConnected(){
+
+  public void saveData(String topic, Object jpadata) throws MqttException {
+    if (jpadata instanceof Poll) {
+      if (!isConnected()) this.connectClient();
+      Poll pJpadata = (Poll) jpadata;
+      //
+      System.out.println("********************");
+      System.out.println("In savaData (MqClient) :\nPoll :\n" + pJpadata);
+      System.out.println("********************");
+      //
+      String base64Encoded = DatatypeConverter.printBase64Binary(pJpadata.toJson().getBytes(UTF_8));
+      this.mqttClient.publish(
+              topic,
+              base64Encoded.getBytes(UTF_8),
+              2,
+              false);
+    } else if (jpadata instanceof UserProfile) {
+      if (!isConnected()) this.connectClient();
+      UserProfile pJpadata = (UserProfile) jpadata;
+      String base64Encoded = DatatypeConverter.printBase64Binary(pJpadata.toJson().getBytes(UTF_8));
+      this.mqttClient.publish(
+              topic,
+              base64Encoded.getBytes(UTF_8),
+              2,
+              false);
+    }
+  }
+
+  public Set<Poll> getPolls(String topic) throws MqttException {
+    if (!isConnected()) this.connectClient();
+    this.mqttClient.subscribe(topic, (tpc, msg) -> {
+      buffer = DatatypeConverter.parseBase64Binary(msg.toString()).toString();
+    });
+    System.out.println(buffer);
+    buffer = "";
+    Set<Poll> polls = new HashSet<>();
+    return polls;
+  }
+
+  private Boolean isConnected() {
     return this.connected;
   }
 }
