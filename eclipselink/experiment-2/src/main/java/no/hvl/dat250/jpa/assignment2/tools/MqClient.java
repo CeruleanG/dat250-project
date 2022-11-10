@@ -84,13 +84,7 @@ public class MqClient {
   public void saveData(String topic, Object jpadata) throws MqttException {
     if (jpadata instanceof Poll) {
       if (!isConnected()) this.connectClient();
-      Poll pJpadata = (Poll) jpadata;
-      //
-      System.out.println("********************");
-      System.out.println("In savaData (MqClient) :\nPoll :\n" + pJpadata);
-      System.out.println("********************");
-      //
-      String base64Encoded = DatatypeConverter.printBase64Binary(pJpadata.toJson().getBytes(UTF_8));
+      String base64Encoded = DatatypeConverter.printBase64Binary(((Poll) jpadata).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
               base64Encoded.getBytes(UTF_8),
@@ -98,8 +92,7 @@ public class MqClient {
               false);
     } else if (jpadata instanceof UserProfile) {
       if (!isConnected()) this.connectClient();
-      UserProfile pJpadata = (UserProfile) jpadata;
-      String base64Encoded = DatatypeConverter.printBase64Binary(pJpadata.toJson().getBytes(UTF_8));
+      String base64Encoded = DatatypeConverter.printBase64Binary(((UserProfile) jpadata).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
               base64Encoded.getBytes(UTF_8),
@@ -110,7 +103,8 @@ public class MqClient {
 
   public Set<Poll> getPolls(String topic) throws MqttException {
     if (!isConnected()) this.connectClient();
-    this.mqttClient.subscribe(topic, (tpc, msg) -> {
+    this.mqttClient.subscribe(topic + "/#", (tpc, msg) -> {
+      System.out.println(msg.toString());
       buffer = DatatypeConverter.parseBase64Binary(msg.toString()).toString();
     });
     System.out.println(buffer);

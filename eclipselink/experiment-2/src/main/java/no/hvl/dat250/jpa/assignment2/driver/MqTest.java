@@ -99,10 +99,11 @@ public class MqTest {
     poll.setPublic(true);
     poll.setOwner(new UserProfile());
 
-    client.saveData("/polls", poll.toString());
-    System.out.println("Created Polls :\n" + poll.toString());
-    System.out.println("Retrieved Polls :\n");
+    client.saveData("/polls", poll);
+    System.out.println("Created Polls :\n" + poll.toJson().toString());
+
     Set<Poll> retrievedPoll = client.getPolls("/polls");
+    System.out.println("Retrieved Polls :\n");
     client.disconnectClient();
   }
 }
