@@ -3,12 +3,12 @@ package no.hvl.dat250.jpa.assignment2.driver;
 import no.hvl.dat250.jpa.assignment2.Poll;
 import no.hvl.dat250.jpa.assignment2.UserProfile;
 import no.hvl.dat250.jpa.assignment2.tools.MqClient;
+import no.hvl.dat250.jpa.assignment2.tools.MqDataMonitor;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.util.Arrays;
-import java.util.Set;
 
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -17,10 +17,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class MqTest {
 
   public static void main(String[] args) throws MqttException, InterruptedException {
+    MqDataMonitor dataMonitor = new MqDataMonitor();
+
     //testGettingStarted();
     //testConnectToServer();
     //testPublishAndSubscribe();
     testPublishAndSubscribeAPIClass();
+
+    dataMonitor.disconnectClient();
   }
 
   // When everything will work, remove this test
@@ -91,6 +95,7 @@ public class MqTest {
 
   //@Test
   public static void testPublishAndSubscribeAPIClass() throws MqttException {
+    /*
     MqClient client = new MqClient();
 
     Poll poll = new Poll();
@@ -104,6 +109,17 @@ public class MqTest {
 
     Set<Poll> retrievedPoll = client.getPolls("/polls");
     System.out.println("Retrieved Polls :\n");
+    client.disconnectClient();
+    */
+    MqClient client = new MqClient();
+
+    Poll poll = new Poll();
+    poll.setTopic("My subject");
+    poll.setStatus(1);
+    poll.setPublic(true);
+    poll.setOwner(new UserProfile());
+
+    client.saveData("/polls", poll);
     client.disconnectClient();
   }
 }

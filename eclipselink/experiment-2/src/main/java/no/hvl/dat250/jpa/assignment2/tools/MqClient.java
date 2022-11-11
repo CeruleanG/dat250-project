@@ -8,16 +8,14 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import javax.net.ssl.SSLSocketFactory;
 import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqClient {
   protected static final MqttManager mqttManager = new MqttManager();
-  private final MqttClient mqttClient;
+  protected final MqttClient mqttClient;
   private Boolean connected = false;
-  private String buffer = "";
+  protected String buffer = "";
 
   public MqClient() throws MqttException {
     this.mqttClient = new MqttClient(
@@ -81,18 +79,18 @@ public class MqClient {
             false);
   }
 
-  public void saveData(String topic, Object jpadata) throws MqttException {
-    if (jpadata instanceof Poll) {
+  public void saveData(String topic, Object jpaData) throws MqttException {
+    if (jpaData instanceof Poll) {
       if (!isConnected()) this.connectClient();
-      String base64Encoded = DatatypeConverter.printBase64Binary(((Poll) jpadata).toJson().getBytes(UTF_8));
+      String base64Encoded = DatatypeConverter.printBase64Binary(((Poll) jpaData).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
               base64Encoded.getBytes(UTF_8),
               2,
               false);
-    } else if (jpadata instanceof UserProfile) {
+    } else if (jpaData instanceof UserProfile) {
       if (!isConnected()) this.connectClient();
-      String base64Encoded = DatatypeConverter.printBase64Binary(((UserProfile) jpadata).toJson().getBytes(UTF_8));
+      String base64Encoded = DatatypeConverter.printBase64Binary(((UserProfile) jpaData).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
               base64Encoded.getBytes(UTF_8),
@@ -101,6 +99,7 @@ public class MqClient {
     }
   }
 
+  /*
   public Set<Poll> getPolls(String topic) throws MqttException {
     if (!isConnected()) this.connectClient();
     this.mqttClient.subscribe(topic + "/#", (tpc, msg) -> {
@@ -112,6 +111,7 @@ public class MqClient {
     Set<Poll> polls = new HashSet<>();
     return polls;
   }
+*/
 
   private Boolean isConnected() {
     return this.connected;
