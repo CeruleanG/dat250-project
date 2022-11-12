@@ -6,7 +6,6 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import javax.net.ssl.SSLSocketFactory;
-import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -82,18 +81,16 @@ public class MqClient {
   public void saveData(String topic, Object jpaData) throws MqttException {
     if (jpaData instanceof Poll) {
       if (!isConnected()) this.connectClient();
-      String base64Encoded = DatatypeConverter.printBase64Binary(((Poll) jpaData).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
-              base64Encoded.getBytes(UTF_8),
+              ((Poll) jpaData).toJson().getBytes(UTF_8),
               2,
               false);
     } else if (jpaData instanceof UserProfile) {
       if (!isConnected()) this.connectClient();
-      String base64Encoded = DatatypeConverter.printBase64Binary(((UserProfile) jpaData).toJson().getBytes(UTF_8));
       this.mqttClient.publish(
               topic,
-              base64Encoded.getBytes(UTF_8),
+              ((UserProfile) jpaData).toJson().getBytes(UTF_8),
               2,
               false);
     }

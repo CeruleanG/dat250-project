@@ -47,5 +47,4 @@ class MqttManager {
   protected final String getPassword() {
     return this.password;
   }
-
 }

@@ -1,5 +1,7 @@
 package no.hvl.dat250.jpa.assignment2.driver;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import no.hvl.dat250.jpa.assignment2.Poll;
 import no.hvl.dat250.jpa.assignment2.UserProfile;
 import no.hvl.dat250.jpa.assignment2.tools.MqClient;
@@ -8,21 +10,28 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-
 public class MqTest {
+  private static final Gson gson = new Gson();
+  private static final Type POLL_LIST_TYPE = new TypeToken<List<Poll>>() {
+  }.getType();
+  private static MqDataMonitor dataMonitor;
 
-  public static void main(String[] args) throws MqttException, InterruptedException {
+  public static void main(String[] args) throws MqttException, InterruptedException, IOException {
     MqDataMonitor dataMonitor = new MqDataMonitor();
 
     //testGettingStarted();
     //testConnectToServer();
     //testPublishAndSubscribe();
-    testPublishAndSubscribeAPIClass();
+    testSaveData();
+    //testGetPolls();
 
     dataMonitor.disconnectClient();
   }
@@ -94,7 +103,7 @@ public class MqTest {
   }
 
   //@Test
-  public static void testPublishAndSubscribeAPIClass() throws MqttException {
+  public static void testSaveData() throws MqttException {
     /*
     MqClient client = new MqClient();
 
@@ -121,5 +130,36 @@ public class MqTest {
 
     client.saveData("/polls", poll);
     client.disconnectClient();
+  }
+
+  //@Test
+  public static void testGetPolls() throws MqttException, IOException {
+    MqClient client = new MqClient();
+
+    final Poll poll1 = new Poll();
+    poll1.setTopic("My subject");
+    poll1.setStatus(1);
+    poll1.setPublic(true);
+    poll1.setOwner(new UserProfile());
+
+    final Poll poll2 = new Poll();
+    poll2.setTopic("My subject");
+    poll2.setStatus(1);
+    poll2.setPublic(true);
+    poll2.setOwner(new UserProfile());
+
+    client.saveData(poll1.getTopic(), poll1);
+    client.saveData(poll2.getTopic(), poll2);
+
+    final String getResult = dataMonitor.getPolls().toString();
+    final List<Poll> polls = parsePolls(getResult);
+
+    System.out.println("Polls : " + polls.toString());
+
+    client.disconnectClient();
+  }
+
+  private static List<Poll> parsePolls(String result) {
+    return gson.fromJson(result, POLL_LIST_TYPE);
   }
 }
