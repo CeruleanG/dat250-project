@@ -2,7 +2,6 @@ package no.hvl.dat250.jpa.assignment2.driver;
 
 import com.google.gson.Gson;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.Set;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -17,7 +16,7 @@ public class API {
     if (args.length > 0) {
       port(Integer.parseInt(args[0]));
     } else {
-      port(6060);
+      port(3030);
     }
     after((req, res) -> res.type("application/json"));
 
@@ -34,7 +33,6 @@ public class API {
               Poll poll = gson.fromJson(req.body(), Poll.class);
               jpa.saveData(poll);
               return ow.writeValueAsString(poll);
-              //return poll.toJson();
             }
     );
 
@@ -45,7 +43,6 @@ public class API {
             {
               Gson gson = new Gson();
               return ow.writeValueAsString(jpa.getPolls());
-              //return gson.toJson(jpa.getPolls());
             }
     );
 
@@ -61,10 +58,11 @@ public class API {
               for (Poll poll : polls) {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   return ow.writeValueAsString(poll);
-                  //return poll.toJson();
                 }
               }
-              return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+              //return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
+              Poll badPoll = new Poll(-1L);
+              return ow.writeValueAsString(badPoll);
             }
     );
 
@@ -82,13 +80,14 @@ public class API {
                   Gson gson = new Gson();
                   Poll fromPoll = gson.fromJson(req.body(), Poll.class);
                   poll.setTopic(fromPoll.getTopic());
+                  poll.setYesNb(fromPoll.getYesNb());
+                  poll.setNoNb(fromPoll.getNoNb());
                   poll.setStatus(fromPoll.getStatus());
-                  poll.setPublic(fromPoll.isPublic());
+                  poll.setPublicAccess(fromPoll.getPublicAccess());
                   poll.setOwner(fromPoll.getOwner());
                   poll.setParticipants(fromPoll.getParticipants());
                   jpa.saveData(poll);
                   return ow.writeValueAsString(poll);
-                  //return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -108,7 +107,6 @@ public class API {
                 if (req.params(":id").equals(poll.getId().toString())) {
                   jpa.deleteData(poll);
                   return ow.writeValueAsString(poll);
-                  //return poll.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -136,7 +134,6 @@ public class API {
             {
               Gson gson = new Gson();
               return ow.writeValueAsString(jpa.getUsers());
-              //return gson.toJson(jpa.getUsers());
             }
     );
 
@@ -152,7 +149,6 @@ public class API {
               for (UserProfile user : users) {
                 if (req.params(":id").equals(user.getId().toString())) {
                   return ow.writeValueAsString(user);
-                  //return user.toJson();
                 }
               }
               return String.format("User with the id \"%s\" not found!", req.params(":id"));
@@ -179,7 +175,6 @@ public class API {
 
                   jpa.saveData(user);
                   return ow.writeValueAsString(user);
-                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -204,13 +199,16 @@ public class API {
                   for (Poll poll : polls) {
                     if (req.params(":id2").equals(poll.getId().toString())) {
                       poll.setOwner(user);
-                      if(!user.getPollsOwned().contains(poll))
+                      if(!user.getPollsOwned().contains(poll)) {
                         user.getPollsOwned().add(poll);
+                        //jpa.saveData(poll);
+                      }
                     }
+                    jpa.saveData(poll);
                   }
-                  jpa.saveData(user);
+                  //jpa.saveData(user);
+
                   return ow.writeValueAsString(user);
-                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -239,10 +237,10 @@ public class API {
                       if(!user.getPollsParticipated().contains(poll))
                         user.getPollsParticipated().add(poll);
                     }
+                    jpa.saveData(poll);
                   }
-                  jpa.saveData(user);
+                  //jpa.saveData(user);
                   return ow.writeValueAsString(user);
-                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));
@@ -262,7 +260,6 @@ public class API {
                 if (req.params(":id").equals(user.getId().toString())) {
                   jpa.deleteData(user);
                   return ow.writeValueAsString(user);
-                  //return user.toJson();
                 }
               }
               return String.format("Poll with the id \"%s\" not found!", req.params(":id"));

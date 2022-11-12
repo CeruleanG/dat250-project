@@ -21,14 +21,16 @@ public class Poll implements Serializable {
     private String topic;
     private int yesNb;
     private int noNb;
-    private int status; // 0 = closed; 1 = open
-    private boolean isPublic;
+    @JsonProperty
+    private boolean status; // 0 = closed; 1 = open
+    @JsonProperty
+    private boolean publicAccess;
     
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne//(cascade = CascadeType.PERSIST)
     @JsonIncludeProperties({"id"})
     private UserProfile owner;
     
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany//(cascade = CascadeType.PERSIST)
     @JsonIncludeProperties({"id"})
     private List<UserProfile> participants;
 
@@ -37,6 +39,15 @@ public class Poll implements Serializable {
     }
 
     public Poll(){}
+
+    public boolean getPublicAccess()
+    {
+        return this.publicAccess;
+    }
+
+    public boolean getStatus(){
+        return this.status;
+    }
 
     public String toJson()
     {
