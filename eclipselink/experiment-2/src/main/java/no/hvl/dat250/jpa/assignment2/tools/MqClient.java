@@ -20,7 +20,7 @@ public class MqClient {
     this.mqttClient = new MqttClient(
             "ssl://" + mqttManager.getHost() + ":" + mqttManager.getPort(), // serverURI in format:
             // "protocol://name:port"
-            MqttClient.generateClientId(), // ClientId
+            MqttClient.generateClientId(), // ClientId,
             new MemoryPersistence()); // Persistence
 
     this.setCallback();
@@ -29,6 +29,7 @@ public class MqClient {
 
   final protected void connectClient() throws MqttException {
     MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+    mqttConnectOptions.setCleanSession(true);
     mqttConnectOptions.setUserName(mqttManager.getUsername());
     mqttConnectOptions.setPassword(mqttManager.getPassword().toCharArray());
     // using the default socket factory

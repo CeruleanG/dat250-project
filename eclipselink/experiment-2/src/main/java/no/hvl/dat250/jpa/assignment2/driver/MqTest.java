@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -25,13 +26,13 @@ public class MqTest {
   private static MqDataMonitor dataMonitor;
 
   public static void main(String[] args) throws MqttException, InterruptedException, IOException {
-    MqDataMonitor dataMonitor = new MqDataMonitor();
+    dataMonitor = new MqDataMonitor();
 
     //testGettingStarted();
     //testConnectToServer();
     //testPublishAndSubscribe();
-    testSaveData();
-    //testGetPolls();
+    //testSaveData();
+    testGetPolls();
 
     dataMonitor.disconnectClient();
   }
@@ -137,22 +138,23 @@ public class MqTest {
     MqClient client = new MqClient();
 
     final Poll poll1 = new Poll();
-    poll1.setTopic("My subject");
+    poll1.setTopic("My subject1");
     poll1.setStatus(1);
     poll1.setPublic(true);
     poll1.setOwner(new UserProfile());
 
     final Poll poll2 = new Poll();
-    poll2.setTopic("My subject");
+    poll2.setTopic("My subject2");
     poll2.setStatus(1);
     poll2.setPublic(true);
     poll2.setOwner(new UserProfile());
 
-    client.saveData(poll1.getTopic(), poll1);
-    client.saveData(poll2.getTopic(), poll2);
+    client.saveData("/polls", poll1);
+    client.saveData("/polls", poll2);
 
-    final String getResult = dataMonitor.getPolls().toString();
-    final List<Poll> polls = parsePolls(getResult);
+    final Set<String> getResult = dataMonitor.getPolls();
+    System.out.println("Result : " + getResult);
+    final List<Poll> polls = parsePolls(getResult.toString());
 
     System.out.println("Polls : " + polls.toString());
 

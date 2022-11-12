@@ -74,6 +74,7 @@ public class MqDataMonitor extends MqClient {
   private void createFile(Path file_pathName) throws IOException {
     try {
       Files.createFile(file_pathName);
+      System.out.println("File created");
     } catch (FileAlreadyExistsException ex) {
       System.err.println("File already exists");
       deleteFile(file_pathName);
@@ -87,7 +88,7 @@ public class MqDataMonitor extends MqClient {
     if (Files.deleteIfExists(file_pathName)) {
       System.out.println("File deleted");
     } else {
-      System.out.println("File doesn't exist. Creation of the file...");
+      System.err.println("File doesn't exist. Creation of the file...");
       this.createFile(file_pathName);
     }
   }
@@ -107,6 +108,7 @@ public class MqDataMonitor extends MqClient {
   public void writeFile(Path file_pathName, String line) throws IOException {
     if (Files.exists(file_pathName)) {
       List<String> lines = new ArrayList<>();
+      lines = this.readFile(file_pathName);
       lines.add(line);
       Files.write(file_pathName, lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE);
     } else {
@@ -118,11 +120,11 @@ public class MqDataMonitor extends MqClient {
   }
 
   public Set<String> getPolls() throws IOException {
-    Set<String> polls = new HashSet<>();
+    List<String> polls = new ArrayList<>();
     Path pollsFile = Path.of(COMPLETE_POLL_FILE_NAME);
     if (Files.exists(pollsFile)) {
-      polls = (Set<String>) this.readFile(pollsFile);
+      polls = (List<String>) this.readFile(pollsFile);
     }
-    return polls;
+    return new HashSet<>(polls);
   }
 }
